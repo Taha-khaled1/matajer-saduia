@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('schedule-run', [CommandController::class, 'scheduleCommand'])->name("schedule.run");
 Route::group(['middleware' => 'ChangeLanguage'], function () {
-       
+
     Route::post('/contact', [ContactUsController::class, 'store']);
     Route::get('/orders/create', [OrderController::class, 'saveOrder']);
 
@@ -59,7 +59,7 @@ Route::group(['middleware' => 'ChangeLanguage'], function () {
 
 
     Route::group(['middleware' => 'sanctum'], function () {
-       Route::controller(NotificationController::class)->group(function () {
+        Route::controller(NotificationController::class)->group(function () {
 
             // Route to get all notifications of the authenticated user.
             Route::get('/notifications', 'getUserNotifications');
@@ -76,7 +76,7 @@ Route::group(['middleware' => 'ChangeLanguage'], function () {
             Route::get('/orders/detalis/{id}', 'orderDetalis');
 
             Route::post('/orders/cancel', 'cancelOrder');
-             Route::post('/orders/reorder', 'Reorder');
+            Route::post('/orders/reorder', 'Reorder');
         });
         Route::controller(UserController::class)->group(function () {
             Route::get('userInformation', 'getUserInfo');
@@ -106,10 +106,9 @@ Route::group(['middleware' => 'ChangeLanguage'], function () {
         Route::get('/product/{productId}', 'getProductById')->name('product.getProductById');
         Route::post('/search-product',  'searchProduct')->name('search-product');
         Route::get('/sorted-products', 'getSortedProducts');
-         Route::get('/gift-products', 'getProductsGift');
+        Route::get('/gift-products', 'getProductsGift');
         Route::post('updateviews/{id}', 'updateViews')->name('updateviews');
         Route::get('products/with-offers', 'getProductsByOffer');
-
     });
 
     Route::controller(SettingPageController::class)->group(function () {
@@ -141,6 +140,7 @@ Route::group(['middleware' => 'ChangeLanguage'], function () {
     Route::group(['middleware' => 'sanctum'], function () {
         Route::controller(CartItemController::class)->group(function () {
             Route::post('/cart/add', 'addToCart')->name('cart.addToCart');
+            Route::delete('/cart/delete', 'deleteCartItemsByMerchant')->name('cart.delete');
             Route::post('/cart/reduce', 'reduceQuantity')->name('cart.reduce');
             Route::post('/cart/increase', 'increaseQuantity')->name('cart.Increase');
             Route::post('/cart/applycoupon', 'applyCoupon')->name('cart.applyCoupon');

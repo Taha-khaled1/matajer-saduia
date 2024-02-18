@@ -168,10 +168,11 @@ class CartItemController extends Controller
     {
         try {
             $userId = $request->user->id;
-            $first_order_discount = 0;
-            // Assuming cartItemsData fetches products and includes merchant data
+            $cartItemsss = CartItem::cartItemsData($userId)->get();
+            $dataPrices = $this->calculateTotalAndPrices($cartItemsss);
             $cartItems = CartItem::with('product.user')->where('user_id', $userId)->get();
-            // return $cartItems;
+
+
             // Group products by merchant
             $itemsByMerchant = $cartItems->groupBy('product.user.id')->map(function ($items, $merchantId) {
                 $merchant = $items->first()->product->user;
@@ -179,7 +180,7 @@ class CartItemController extends Controller
                     'merchant_info' => [
                         'id' => $merchant->id,
                         'name' => $merchant->name,
-                        'shipping_companies' => $merchant->shippingCompanies,  // Include any other merchant details you need
+                        'shipping_companies' => $merchant->shippingCompanies->where("name_ar", "asdasd"),  // Include any other merchant details you need
                     ],
                     'products' => $items->map(function ($item) {
                         return $item;
@@ -188,7 +189,7 @@ class CartItemController extends Controller
             })->values(); // هنا تتم إضافة values() لحذف المفاتيح العشوائية والاحتفاظ فقط بالقيم.
 
 
-            $dataPrices = $this->calculateTotalAndPrices($cartItems);
+
 
             return response()->json([
                 'cart_items_by_merchant' => $itemsByMerchant,
@@ -198,6 +199,29 @@ class CartItemController extends Controller
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => __('custom.failed_to_retrieve_data') . $e, 'status_code' => 500], 500);
+        }
+    }
+    public function deleteCartItemsByMerchant(Request $request)
+    {
+        try {
+            $userId = $request->user->id;
+            $merchantId = $request->merchantId;
+            // Find cart items associated with the specified merchant for the current user
+            $cartItemsToDelete = CartItem::whereHas('product.user', function ($query) use ($merchantId) {
+                $query->where('id', $merchantId);
+            })->where('user_id', $userId)->get();
+
+            // Delete the cart items
+            $cartItemsToDelete->each(function ($cartItem) {
+                $cartItem->delete();
+            });
+
+            return response()->json([
+                'message' => 'Cart items from the specified merchant have been deleted successfully',
+                'status_code' => 200
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => __('custom.failed_to_delete_cart_items') . $e, 'status_code' => 500], 500);
         }
     }
 
