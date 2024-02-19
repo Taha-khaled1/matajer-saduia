@@ -180,10 +180,29 @@ class CartItemController extends Controller
                     'merchant_info' => [
                         'id' => $merchant->id,
                         'name' => $merchant->name,
-                        'shipping_companies' => $merchant->shippingCompanies->where("name_ar", "asdasd"),  // Include any other merchant details you need
+                        'shipping_companies' => $merchant->shippingCompanies, //->where("name_ar", "asdasd"),  // Include any other merchant details you need
                     ],
                     'products' => $items->map(function ($item) {
-                        return $item;
+                        return [
+                            "cart_id" => $item->id,
+                            "attribute_id" => $item->attribute_id,
+                            "product_id" => $item->product_id,
+                            "product" => [
+                                "id" => $item->product->id,
+                                "name" => $item->product->name_ar,
+                                "image" => $item->product->image,
+                                "quantity" => $item->product->quantity,
+                                "price" => $item->product->price,
+                                "discount" => $item->product->discount,
+                                "percentage_discount" => $item->product->percentage_discount,
+                                "shipping_fee" => $item->product->shipping_fee,
+                                "discount_start" => $item->product->discount_start,
+                                "discount_end" => $item->product->discount_end,
+                                "weight" => $item->product->weight,
+                                "final_price" => $item->product->final_price,
+                            ]
+                        ];
+                        //["product" => $item->product->select('id')];
                     }),
                 ];
             })->values(); // هنا تتم إضافة values() لحذف المفاتيح العشوائية والاحتفاظ فقط بالقيم.
