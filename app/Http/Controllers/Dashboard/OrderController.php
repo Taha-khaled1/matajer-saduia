@@ -7,6 +7,7 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\SettingWeb;
+use App\Models\Withdrawal;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -14,9 +15,9 @@ class OrderController extends Controller
     function __construct()
     {
 
-        $this->middleware('permission:جميع الطلبيات', ['only' => ['index', 'pendingOrders', 'processingOrders', 'deliveringOrders', 'completedOrders', 'changePaymentStatus', 'changeOrderStatus', 'changeDeliveryTime']]);
+        // $this->middleware('permission:جميع الطلبيات', ['only' => ['index', 'pendingOrders', 'processingOrders', 'deliveringOrders', 'completedOrders', 'changePaymentStatus', 'changeOrderStatus', 'changeDeliveryTime']]);
         //  $this->middleware('permission:طباعة الطلبيه', ['only' => ['printInvoice']]);
-        $this->middleware('permission:حذف الطلبيه', ['only' => ['destroy']]);
+        // $this->middleware('permission:حذف الطلبيه', ['only' => ['destroy']]);
         // $this->middleware('permission:عرض الطلبيه', ['only' => ['printInvoice']]);
         //  $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
         //  $this->middleware('permission:role-delete', ['only' => ['destroy']]);
@@ -138,9 +139,38 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Order $order)
+    public function uploadMotalpa()
     {
-        //
+        $orders = Order::where("shope_id", Auth::user()->id)
+            ->where("payment_method", "tap")
+            ->whereDate('created_at', '>=', now()->subDays(3))
+            ->get();
+        if (count($orders) < 1) {
+            session()->flash('delete', 'لا يوجد طلبات تمت');
+            return redirect()->route('orders')->with('success', 'orders deleted successfully');
+        }
+
+
+
+        $shippingTotal = 0;
+        $discountTotal = 0;
+        $subtotalTotal = 0;
+        $totalTotal = 0;
+
+        foreach ($orders as $order) {
+            $shippingTotal += $order->shipping;
+            $discountTotal += $order->discount;
+            $subtotalTotal += $order->subtotal;
+            $totalTotal += $order->total;
+        }
+        $withdrawal = new Withdrawal;
+        $withdrawal->total = $totalTotal;
+        $withdrawal->type =  "suspended";
+        $withdrawal->user_id = Auth::user()->id;
+        $withdrawal->save();
+        // $withdrawal->id = md5(uniqid('', true));
+        session()->flash('delete', 'تم رفع المطالبه بنجاح ');
+        return redirect()->route('orders')->with('success', 'orders deleted successfully');
     }
 
     /**

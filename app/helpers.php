@@ -41,6 +41,16 @@ function ReverseLanguage($lang)
     return "ar";
 }
 
+function typeWithdrawer($status)
+{
+    if ($status == 'won') {
+        return 'ربح';
+    } else if ($status == 'drawn') {
+        return 'مغلق';
+    } else {
+        return 'مفتوح';
+    }
+}
 function statusToArabic($status)
 {
 

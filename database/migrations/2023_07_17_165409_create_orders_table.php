@@ -25,11 +25,12 @@ return new class extends Migration
             $table->boolean('cancelled')->default(false);
             $table->boolean('isrefund')->default(false);
             $table->float('refound_money')->default(0);
-            $table->float('shipping')->default(0); // shipping_cost // مجموع سعر اوزان كل المنتجات
+            // shipping_cost // مجموع سعر اوزان كل المنتجات
             $table->float('tax')->default(0);
-            $table->float('discount')->default(0); // مجموع سعر الخصومات علي المنتجات 
-            $table->float('subtotal')->default(0); // مجموع سعر المنتجات بعد حساب الخصم 
-            $table->float('total')->default(0); // المجوع الكلي للطلبيه بعد حساب كل شئ للطلبيه
+            $table->float('shipping')->default(0);
+            $table->float('discount')->default(0);
+            $table->float('subtotal')->default(0);
+            $table->float('total')->default(0);
             $table->text('description')->nullable();
             $table->timestamp('delivery_time')->nullable();
             $table->timestamps();

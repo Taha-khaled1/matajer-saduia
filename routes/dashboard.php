@@ -18,6 +18,8 @@ use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\RoleController;
 use App\Http\Controllers\Dashboard\SettingWebController;
 use App\Http\Controllers\Dashboard\VendorController;
+use App\Http\Controllers\Dashboard\WithdrawalController;
+use App\Http\Controllers\Dashboard\WithdrawalMangmentController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +56,17 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/contactus', 'index')->name('contactus');
 
         Route::delete('/contactus/destroy', 'destroy')->name('contactus.destroy');
+    });
+    Route::controller(WithdrawalController::class)->group(function () {
+        Route::get('/withdrawals', 'index')->name('withdrawals');
+        Route::post('/withdrawals/store', 'store')->name('withdrawals.store');
+        Route::post('/withdrawals/destroy', 'destroy')->name('withdrawals.destroy');
+    });
+
+    Route::controller(WithdrawalMangmentController::class)->group(function () {
+        Route::get('/withdrawals/mangment', 'index')->name('withdrawals.mangment');
+        Route::post('/withdrawals/mangment/changeType', 'changeType')->name('withdrawals.changeType');
+        // Route::post('/withdrawals/destroy', 'destroy')->name('withdrawals.destroy');
     });
 
     Route::controller(ShippingCompaniesController::class)->group(function () {
@@ -94,6 +107,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/orders/completedOrders', 'completedOrders')->name('orders.completedOrders');
         Route::get('/orders/invoice/{id}', 'printInvoice')->name('orders.invoice');
         Route::delete('/orders/destroy', 'destroy')->name('orders.destroy');
+        Route::get('/orders/uploadMotalpa', 'uploadMotalpa')->name('orders.uploadMotalpa');
+
         Route::post('/orders/changePaymentStatus', 'changePaymentStatus')->name('orders.changePaymentStatus');
         Route::post('/orders/changeOrderStatus', 'changeOrderStatus')->name('orders.changeOrderStatus');
         Route::post('/orders/changeDeliveryTime', 'changeDeliveryTime')->name('orders.changeDeliveryTime');

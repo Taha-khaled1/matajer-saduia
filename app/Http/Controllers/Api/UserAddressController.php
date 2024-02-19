@@ -15,17 +15,14 @@ class UserAddressController extends Controller
 
     public function index(Request $request)
     {
-        try
-        {
+        try {
             $userAddresses = UserAddress::AddressRes($request->user->id)->get();
             return response()->json([
                 'userAddresses' => $userAddresses,
                 'message' => 'Success',
                 'status_code' => Response::HTTP_OK,
             ]);
-        }
-        catch (\Throwable $th)
-        {
+        } catch (\Throwable $th) {
             return response()->json(['message' => __('custom.failed_to_retrieve_data'), 'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -36,8 +33,7 @@ class UserAddressController extends Controller
 
     public function store(Request $request)
     {
-        try
-        {
+        try {
             $validator = Validator::make($request->all(), [
                 'country' => 'required|string|exists:countries,name',
                 'state' => 'nullable|string',
@@ -54,28 +50,25 @@ class UserAddressController extends Controller
                 'delivery_instruction' => 'nullable|string',
                 // 'default' => 'required|in:0,1',
             ]);
-           
-            if ($validator->fails())
-            {
-                return response()->json(['message' => $validator->errors()->first() , 'errors' => $validator->errors(), 'status_code' => 400], 400);
-            }
-            $country = Country::where('name',$request->country)->first();
-            $countryMap = extractCountryName($request->address_1);
 
-            if ($countryMap != $country->name_en)
-            {
-                return response()->json(['message' => __('custom.ensure_location_selected'), 'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
+            if ($validator->fails()) {
+                return response()->json(['message' => $validator->errors()->first(), 'errors' => $validator->errors(), 'status_code' => 400], 400);
             }
-            // __('custom.validation_error')
-            $userAddress = UserAddress::create(array_merge($validator->validated(), ['user_id' => $request->user->id]));
+            // $country = Country::where('name',$request->country)->first();
+            // $countryMap = extractCountryName($request->address_1);
+
+            // if ($countryMap != $country->name_en)
+            // {
+            //     return response()->json(['message' => __('custom.ensure_location_selected'), 'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
+            // }
+            // // __('custom.validation_error')
+            // $userAddress = UserAddress::create(array_merge($validator->validated(), ['user_id' => $request->user->id]));
             return response()->json([
                 // 'userAddress' => $userAddress,
                 'message' => 'Success',
                 'status_code' => Response::HTTP_OK,
             ]);
-        }
-        catch (\Throwable $th)
-        {
+        } catch (\Throwable $th) {
             return response()->json(['message' => __('custom.failed_to_store_user_address'), 'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -85,28 +78,22 @@ class UserAddressController extends Controller
 
     public function show(Request $request)
     {
-        try
-        {
+        try {
             $userAddress = UserAddress::SingleAddressRes()->find($request->addressId);
-            if ($userAddress != null)
-            {
+            if ($userAddress != null) {
                 return response()->json([
                     'message' => 'Success',
                     'status_code' => Response::HTTP_OK,
                     'userAddress' => $userAddress
                 ], 200);
-            }
-            else
-            {
+            } else {
                 return response()->json([
                     'message' => __('custom.address_does_not_exist'),
                     'status_code' => 404,
 
                 ], 404);
             }
-        }
-        catch (\Throwable $th)
-        {
+        } catch (\Throwable $th) {
             return response()->json([
                 'message' => __('custom.address_does_not_exist'),
                 'status_code' => 500,
@@ -117,8 +104,7 @@ class UserAddressController extends Controller
 
     public function update(Request $request)
     {
-        try
-        {
+        try {
             $validator = Validator::make($request->all(), [
                 'id' => 'required|exists:user_addresses,id',
                 'country' => 'string',
@@ -136,8 +122,7 @@ class UserAddressController extends Controller
                 'location_id' => 'required|string',
             ]);
 
-            if ($validator->fails())
-            {
+            if ($validator->fails()) {
                 return response()->json(['message' => __('custom.validation_error'), 'errors' => $validator->errors(), 'status_code' => 400], 400);
             }
             $userAddress = UserAddress::find($request->id);
@@ -147,17 +132,14 @@ class UserAddressController extends Controller
                 'message' => 'Success',
                 'status_code' => Response::HTTP_OK,
             ]);
-        }
-        catch (\Throwable $th)
-        {
+        } catch (\Throwable $th) {
             return response()->json(['message' => __('custom.failed_to_store_user_address'), 'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     public function destroy($id)
     {
-        try
-        {
+        try {
             $userAddress = UserAddress::find($id);
             $userAddress->delete();
             return response()->json([
@@ -165,9 +147,7 @@ class UserAddressController extends Controller
                 'message' => 'Success',
                 'status_code' => Response::HTTP_OK,
             ]);
-        }
-        catch (\Throwable $th)
-        {
+        } catch (\Throwable $th) {
             return response()->json(['message' => __('custom.failed_to_delete_user_address'), 'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

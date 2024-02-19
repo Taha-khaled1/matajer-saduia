@@ -33,12 +33,12 @@
         .status {
             /* background-color: aqua; */
             /* color: aqua;
-                                                                                                                                                                                                                                                                                                                                                -moz-background-origin: border-box */
+                                                                                                                                                                                                                                                                                                                                                                        -moz-background-origin: border-box */
         }
 
         /* .btn-secondary {
-                                                                                                                                                        background-color: #0049ff !important;
-                                                                                                                                                    } */
+                                                                                                                                                                                background-color: #0049ff !important;
+                                                                                                                                                                            } */
     </style>
 @endsection
 
@@ -99,6 +99,11 @@
 
         <div class="col-xl-12">
             <div class="card">
+                {{-- <form action="{{ route('orders.uploadMotalpa') }}"> --}}
+                <div class="col-sm-6 col-md-4 col-xl-3">
+                    <a href="{{ route('orders.uploadMotalpa') }}" class="btn btn-outline-primary btn-block">رفع مطالبه</a>
+                </div>
+                {{-- </form> --}}
 
                 <div class="card-body">
                     <div class="table-responsive">
