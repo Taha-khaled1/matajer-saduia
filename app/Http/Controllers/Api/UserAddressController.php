@@ -62,7 +62,7 @@ class UserAddressController extends Controller
             //     return response()->json(['message' => __('custom.ensure_location_selected'), 'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
             // }
             // // __('custom.validation_error')
-            // $userAddress = UserAddress::create(array_merge($validator->validated(), ['user_id' => $request->user->id]));
+            $userAddress = UserAddress::create(array_merge($validator->validated(), ['user_id' => $request->user->id]));
             return response()->json([
                 // 'userAddress' => $userAddress,
                 'message' => 'Success',
