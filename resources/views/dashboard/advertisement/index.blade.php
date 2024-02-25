@@ -33,8 +33,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الادارة المالية /</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">
-                    جيمع الحركات المالية</span>
+                <h4 class="content-title mb-0 my-auto">عام /</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">جميع
+                    الاعلانات</span>
             </div>
         </div>
 
@@ -85,19 +85,31 @@
 
         <div class="col-xl-12">
             <div class="card">
+                <div class="card-header pb-0">
+                    <div class="button-container">
+                        <div>
+                            <a class="modal-effect btn btn-outline-primary d-inline-block" data-effect="effect-scale"
+                                data-toggle="modal" href="#modaldemo8">اضافة اعلان</a>
+
+                            <a class="modal-effect btn btn-outline-primary d-inline-block mr-2" style="width: 300px;"
+                                data-effect="effect-scale" data-toggle="modal" href="#exampleModal0">ارسال اشعار لجميع
+                                المستخدمين</a>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table text-md-nowrap" id="example1">
                             <thead>
                                 <tr>
-                                    <th class="wd-10p border-bottom-0">#</th>
-                                    <th class="wd-10p border-bottom-0">رقم التعريفي</th>
-                                    <th class="wd-15p border-bottom-0">اسم مزود الخدمة</th>
-                                    <th class="wd-15p border-bottom-0">المجموع المالي</th>
-                                    <th class="wd-15p border-bottom-0">نوع الحركة</th>
-                                    <th class="wd-15p border-bottom-0">التاريخ</th>
-                                    <th class="wd-15p border-bottom-0">الحاله</th>
-                                    <th class="wd-15p border-bottom-0">عمليات</th>
+                                    <th class="wd-15p border-bottom-0">رقم الاعلان</th>
+                                    <th class="wd-15p border-bottom-0">عنوان الاعلان</th>
+                                    <th class="wd-15p border-bottom-0">صورة الاعلان</th>
+                                    {{-- <th class="wd-15p border-bottom-0">حالة القبول</th>  --}}
+                                    <th class="wd-15p border-bottom-0">حالة مشاهدة الاعلان</th>
+                                    <th class="wd-20p border-bottom-0">تاريخ الانشاء</th>
+                                    <th class="wd-20p border-bottom-0">العمليات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -106,69 +118,57 @@
                                     $i = 0;
                                 @endphp
 
-                                @foreach ($withdrawals as $withdrawal)
+                                @foreach ($advertisements as $catogery)
                                     @php
                                         $i++;
                                     @endphp
+
                                     <tr>
                                         <td>{{ $i }}</td>
-
-                                        <td>{{ $withdrawal->id }}</td>
-                                        <td>{{ $withdrawal->user->name }}</td>
-                                        <td>{{ $withdrawal->total }}</td>
-                                        <td>طلب سحب</td>
-                                        <td>{{ $withdrawal->created_at->format('d/m/Y') }}</td>
-                                        {{-- <td>{{ typeWithdrawer($withdrawal->type) }}</td> --}}
-
-
-
+                                        </td>
+                                        <td>{{ $catogery->name }}</td>
                                         <td>
-
-                                            <div class="dropdown">
-                                                <button aria-expanded="false" aria-haspopup="true"
-                                                    class="btn ripple btn-secondary"
-                                                    style="background-color: #595BB5 !important;width: 140px;"
-                                                    data-toggle="dropdown"
-                                                    type="button">{{ typeWithdrawer($withdrawal->type) }}<i
-                                                        class="fas fa-caret-down ml-1"></i></button>
-                                                {{-- <div class="dropdown-menu tx-13">
-                                                    <form id="language-form" action="{{ route('withdrawals.changeType') }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="id" value="{{ $withdrawal->id }}">
-
-                                                        <button class="dropdown-item" type="submit" name="type"
-                                                            value="suspended">مفتوح</button>
-                                                        <button class="dropdown-item" type="submit" name="type"
-                                                            value="drawn">مغلق
-                                                        </button>
-                                                    </form>
-                                                </div> --}}
+                                            <div class="image-container">
+                                                <img src="{{ asset($catogery->image) }}" alt="Avatar Image">
                                             </div>
-
-
-
+                                        </td>
+                                        <td>
+                                            @if ($catogery->show == true)
+                                                تم العرض
+                                            @else
+                                                لم يتم العرض
+                                            @endif
 
                                         </td>
-
+                                        <td>{{ $catogery->created_at }}</td>
                                         <td>
                                             <div class="d-flex">
+                                                @can('الالوان')
+                                                    <div class="main-toggle main-toggle-success {{ $catogery->status == true ? 'on' : '' }} btn-sm ml-2"
+                                                        data-catogery-id="{{ $catogery->id }}">
+                                                        <span></span>
+                                                    </div>
+                                                @endcan
                                                 <a class="modal-effect btn btn-sm btn-info btn-sm ml-2"
-                                                    data-effect="effect-scale" data-id="{{ $withdrawal->id }}"
-                                                    data-time="{{ $withdrawal->time }}"
-                                                    data-image="{{ $withdrawal->image }}" data-toggle="modal"
-                                                    href="#exampleModal2" title="تعديل"><i class="las la-pen">
+                                                    data-effect="effect-scale" data-id="{{ $catogery->id }}"
+                                                    data-name="{{ $catogery->name }}"
+                                                    data-status="{{ $catogery->status }}"
+                                                    data-link="{{ $catogery->link }}" data-image="{{ $catogery->image }}"
+                                                    data-toggle="modal" href="#exampleModal2" title="تعديل"><i
+                                                        class="las la-pen">
 
                                                     </i>
                                                 </a>
+
+
+
                                                 <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
-                                                    data-id="{{ $withdrawal->id }}" data-name="{{ $withdrawal->id }}"
+                                                    data-id="{{ $catogery->id }}" data-name="{{ $catogery->name }}"
                                                     data-toggle="modal" href="#modaldemo9" title="حذف"><i
                                                         class="las la-trash"></i></a>
                                             </div>
+
                                         </td>
-
-
                                     </tr>
                                 @endforeach
 
@@ -180,24 +180,80 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="exampleModal0" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">ارسال اشعار للمستخدمين</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('send.notificationToAll') }}" method="post">
+                        {{ csrf_field() }}
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">العنوان</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">الرساله</label>
+                                <input type="text" class="form-control" id="message" name="message" required>
+                            </div>
+                            <input type="text" class="form-control" id="type" name="type" value="all"
+                                hidden>
+
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">تاكيد</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
 
         <div class="modal" id="modaldemo8">
             <div class="modal-dialog" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
-                        <h6 class="modal-title"> طلب سحب رصيد</h6><button aria-label="Close" class="close"
+                        <h6 class="modal-title">اضافة اعلان</h6><button aria-label="Close" class="close"
                             data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('withdrawals.store') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('advertisements.store') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
 
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">عنوان الاعلان</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1">الرصيد</label>
-                                <input type="number" class="form-control" id="price" name="price" min="1"
-                                    placeholder="قم بادخال الرصيد المارد سحبه" required>
+                                <label for="exampleInputEmail1">الرابط </label>
+                                <input type="number" class="form-control" id="link" name="link">
                             </div>
+
+                            <div class="form-group">
+                                <label for="image">تحميل صوره للاعلان </label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="image" name="image"
+                                        required>
+                                    <label class="custom-file-label" for="image">اختار صوره</label>
+                                </div>
+                                <img src="#" id="preview"
+                                    style="display: none; max-width: 200px; max-height: 200px;">
+                            </div>
+
+
+
 
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success">تاكيد</button>
@@ -209,32 +265,38 @@
             </div>
 
         </div>
+        <!-- row closed -->
         <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">تعديل القسم</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">تعديل الاعلان</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('withdrawals.closeWithdrawal') }}" method="post"
+                        <form action="{{ route('advertisements.update', 0) }}" method="post"
                             enctype="multipart/form-data">
-                            {{ method_field('post') }}
+                            {{ method_field('PUT') }}
                             {{ csrf_field() }}
                             <input type="hidden" name="id" id="id" value="">
 
-
+                            {{-- <input type="hidden" name="status" id="status" value=""> --}}
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1">تاريخ المستند</label>
-                                <input type="text" class="form-control" id="time" name="time" required>
+                                <label for="exampleInputEmail1">عنوان الاعلان</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">صوره المستند</label>
+                                <label for="exampleInputEmail1">الرابط </label>
+                                <input type="number" class="form-control" id="link" name="link" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">صوره الاعلان</label>
                                 <input class="form-control" name="image" id="image" type="file"
                                     onchange="displaySelectedImage(event)">
                                 <img src="image" id="preview-image" class="img-thumbnail"
@@ -250,18 +312,19 @@
                 </div>
             </div>
         </div>
+
         <!-- delete -->
         <div class="modal" id="modaldemo9">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
-                        <h6 class="modal-title">حذف </h6>
+                        <h6 class="modal-title">حذف الاعلان</h6>
                         <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('withdrawals.destroy') }}" method="post">
-                        {{ method_field('post') }}
+                    <form action="{{ route('advertisements.destroy', 0) }}" method="post">
+                        {{ method_field('DELETE') }}
                         {{ csrf_field() }}
                         <div class="modal-body">
                             <p>هل أنت متأكد من عملية الحذف؟</p><br>
@@ -306,9 +369,6 @@
     <!--Internal  Datatable js -->
     <script src="{{ URL::asset('assets/js/table-data.js') }}"></script>
 
-
-
-
     <script>
         $('#modaldemo9').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget)
@@ -324,21 +384,104 @@
 
 
 
+
+    <script>
+        $(document).ready(function() {
+            $('.main-toggle').on('click', function() {
+                $(this).toggleClass('on');
+                var isToggleOn = $(this).hasClass('on');
+                var url = '{{ route('advertisements.update-status') }}';
+                var categoryId = $(this).data('catogery-id');
+                // Retrieve the CSRF token value from the meta tag
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        isToggleOn: isToggleOn,
+                        categoryId: categoryId
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        // Handle the success response
+                    },
+                    error: function(error) {
+                        console.log(error);
+                        // Handle the error response
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+    <script>
+        document.querySelector("#image").addEventListener("change", function() {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector("#preview").setAttribute("src", e.target.result);
+                document.querySelector("#preview").style.display = "block";
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+
+
+        function displaySelectedImage(event) {
+            const fileInput = event.target;
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById('preview-image');
+                    previewImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#preview').attr('src', e.target.result).show();
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+
+
+
     <script>
         const appUrl = "{{ url('/') }}";
         $(document).ready(function() {
             $('#exampleModal2').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget)
                 var id = button.data('id')
-                var time = button.data('time')
+                var name = button.data('name')
+                var name_en = button.data('name_en')
+                var link = button.data('link')
+                var status = button.data('status')
                 var image = button.data('image')
-                // var withdrawal_code = button.data('withdrawal_code')
                 var modal = $(this)
                 modal.find('.modal-body #id').val(id)
-                modal.find('.modal-body #time').val(time)
+                modal.find('.modal-body #name').val(name)
                 modal.find('.modal-body #preview-image').attr('src', appUrl + "/" + image)
-                // modal.find('.modal-body #withdrawal_code').val(withdrawal_code)
-
+                modal.find('.modal-body #name_en').val(name_en)
+                modal.find('.modal-body #link').val(link)
+                modal.find('.modal-body #status').val(status)
             })
         });
     </script>

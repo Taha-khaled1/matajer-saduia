@@ -57,12 +57,14 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
+        // return $request;
         $user = $this->createUser($request->validated());
 
         SendVerificationEmailJob::dispatch($user);
 
         $token = $user->createToken('Laravel Sanctum')->plainTextToken;
-        $user->assignRole(["user"]);
+
+        $user->assignRole([$request->type ?? "user"]);
         return response()->json(['token' => $token, 'message' => 'Success', 'status_code' => 200], 200);
     }
 

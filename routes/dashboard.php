@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\AdvertisementController;
 use App\Http\Controllers\Dashboard\BannerController;
 use App\Http\Controllers\Dashboard\CouponController;
 use App\Http\Controllers\Dashboard\CategoryController;
@@ -45,12 +46,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', [DashboardController::class, 'main'])->name('home');
     Route::get('/vendor', [VendorController::class, 'vendorMain'])->name('vendorMain')->middleware('vendorshop');
     Route::resource('categories', CategoryController::class);
+    Route::resource('advertisements', AdvertisementController::class);
+
     Route::resource('subcategories', SubCatogeryController::class);
     Route::resource('colors', ColorController::class);
     Route::resource('sizes', SizeController::class);
     Route::resource('roles', RoleController::class);
     Route::post('/categories/update-status', [CategoryController::class, 'updateStatusCatogery'])->name('categories.update-status');
     Route::post('/subcategories/update-status', [SubCatogeryController::class, 'updateStatusCatogery'])->name('subcategories.update-status');
+    Route::post('/advertisements/update-status', [AdvertisementController::class, 'updateStatusCatogery'])->name('advertisements.update-status');
 
     Route::controller(ContactUsController::class)->group(function () {
         Route::get('/contactus', 'index')->name('contactus');
@@ -66,7 +70,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::controller(WithdrawalMangmentController::class)->group(function () {
         Route::get('/withdrawals/mangment', 'index')->name('withdrawals.mangment');
         Route::post('/withdrawals/mangment/changeType', 'changeType')->name('withdrawals.changeType');
-        // Route::post('/withdrawals/destroy', 'destroy')->name('withdrawals.destroy');
+        Route::post('/withdrawals/closeWithdrawal', 'closeWithdrawal')->name('withdrawals.closeWithdrawal');
     });
 
     Route::controller(ShippingCompaniesController::class)->group(function () {
@@ -139,6 +143,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/user/disable/cash_on_delivery', 'disableCashOnDelivery')->name('user.cash_on_delivery');
         Route::get('/userUpdate/{id}', 'userUpdate')->name('userUpdate');
         Route::get('/user/vendeors', 'vendeors')->name('user.vendeors');
+        Route::get('/user/affiliate', 'affiliateMarketer')->name('user.affiliate');
+        Route::post('/user/chargeWallet', 'chargeWallet')->name('user.chargeWallet');
     });
     Route::controller(CountryController::class)->group(function () {
         // Route::get('/catogery', 'index')->name('catogery');

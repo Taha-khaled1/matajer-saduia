@@ -70,6 +70,21 @@ function statusToArabic($status)
         return 'تم الاسترجاع';
     }
 }
+function roleToArabic($status)
+{
+
+    if ($status == 'user') {
+        return 'مستخدم';
+    } else if ($status == 'affiliate') {
+        return 'مسوق بالعموله';
+    } else if ($status == 'vendor') {
+        return 'بائع';
+    } else if ($status == 'admin') {
+        return 'مالك';
+    } else {
+        return 'مستخدم';
+    }
+}
 
 
 function statusPayment($status)

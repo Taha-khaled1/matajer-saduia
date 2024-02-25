@@ -134,7 +134,7 @@
                                         <label class="form-label">اسم المتجر</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" "UserName" value="" name="username"
+                                        <input type="text" class="form-control" value="" name="username"
                                             id="username">
                                     </div>
                                 </div>
@@ -147,11 +147,66 @@
                                         <label class="form-label">البريد الاكتروني<i>(مطلوب)</i></label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" "Email" value="" name="email"
-                                            id="email">
+                                        <input type="text" class="form-control" value="" name="email"
+                                            id="email" required>
                                     </div>
                                 </div>
                             </div>
+
+
+
+
+                            <div class="form-group ">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">الرقم الضريبي<i>(مطلوب)</i></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" value="" name="idtax"
+                                            id="idtax" required>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group ">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">رقم الهوية<i>(مطلوب)</i></label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" value="" name="idnumber"
+                                            id="idnumber" required>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group ">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">رقم السجل التجاري ان وجد<label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" value=""
+                                            name="commercial_register" id="commercial_register">
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                             <div class="form-group ">
                                 <div class="row">
@@ -159,8 +214,8 @@
                                         <label class="form-label">هاتف المتجر</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" "phone number" value=""
-                                            name="phone" id="phone">
+                                        <input type="text" class="form-control" value="" name="phone"
+                                            id="phone">
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +225,7 @@
                                         <label class="form-label">عنوان المتجر</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <textarea class="form-control" name="address" id="address" rows="2" "Address"></textarea>
+                                        <textarea class="form-control" name="address" id="address" rows="2"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -181,8 +236,8 @@
                                         <label class="form-label">سناب شات</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" "سناب شات" value=""
-                                            name="twitter" id="twitter">
+                                        <input type="text" class="form-control" value="" name="twitter"
+                                            id="twitter">
                                     </div>
                                 </div>
                             </div>
@@ -192,8 +247,8 @@
                                         <label class="form-label">تويتر</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" "twitter" value=""
-                                            name="twitter" id="twitter">
+                                        <input type="text" class="form-control" value="" name="twitter"
+                                            id="twitter">
                                     </div>
                                 </div>
                             </div>
@@ -204,8 +259,8 @@
                                         <label class="form-label">فيسبوك</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" "facebook" value=""
-                                            name="facebook" id="facebook">
+                                        <input type="text" class="form-control" value="" name="facebook"
+                                            id="facebook">
                                     </div>
                                 </div>
                             </div>
@@ -215,8 +270,8 @@
                                         <label class="form-label">انستقرام</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" "google" value=""
-                                            name="google" id="google">
+                                        <input type="text" class="form-control" value="" name="google"
+                                            id="google">
                                     </div>
                                 </div>
                             </div>
@@ -226,8 +281,8 @@
                                         <label class="form-label">لينكدن</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" "linkedin" value=""
-                                            name="linkedin" id="linkedin">
+                                        <input type="text" class="form-control" value="" name="linkedin"
+                                            id="linkedin">
                                     </div>
                                 </div>
                             </div>
@@ -237,8 +292,8 @@
                                         <label class="form-label">اليوتيوب</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" "github" value=""
-                                            name="github" id="github">
+                                        <input type="text" class="form-control" value="" name="github"
+                                            id="github">
                                     </div>
                                 </div>
                             </div>
@@ -249,7 +304,7 @@
                                         <label class="form-label" name="example" id="example">الوصف</label>
                                     </div>
                                     <div class="col-md-9">
-                                        <textarea class="form-control" name="aboutcompany" rows="4" ""></textarea>
+                                        <textarea class="form-control" name="aboutcompany" rows="4"></textarea>
                                     </div>
                                 </div>
                             </div>

@@ -117,9 +117,10 @@
                                     <th class="border-bottom-0">اسم المستخدم</th>
                                     <th class="border-bottom-0">رقم الهاتف</th>
                                     <th class="border-bottom-0">البريد الاكتروني</th>
+                                    <th class="border-bottom-0">المحفظه</th>
                                     <th class="border-bottom-0">صلاحيات المستخدم</th>
                                     <th class="border-bottom-0">حالة المستخدم</th>
-                                    <th class="border-bottom-0">الدفع عند الاسلام</th>
+                                    {{-- <th class="border-bottom-0">الدفع عند الاسلام</th> --}}
                                     <th class="border-bottom-0"> العمليات</th>
 
                                 </tr>
@@ -133,40 +134,54 @@
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->phone ?? 0 }}</td>
                                         <td>{{ $user->email }}</td>
-                                        <td>{{ $user->type }}</td>
+                                        <td>{{ $user->refund }}</td>
+                                        <td>{{ roleToArabic($user->roles[0]['name']) }}</td>
                                         <td>
                                             <div class="main-toggle main-toggle-success {{ $user->status == 1 ? 'on' : '' }} btn-sm ml-2"
                                                 data-user-id="{{ $user->id }}" id="main-toggle">
                                                 <span></span>
                                             </div>
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             <div class="main-toggle main-toggle-success {{ $user->cash_on_delivery == 1 ? 'on' : '' }} btn-sm ml-2"
                                                 data-user-id="{{ $user->id }}" id="cash_on_delivery">
                                                 <span></span>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             <div class="d-flex">
 
 
+                                                @php
+                                                    $user = \App\Models\User::find($user->id);
+                                                @endphp
+                                                @if ($user->hasRole('vendor'))
+                                                    <form action="{{ route('setting') }}">
+                                                        <input type="text" name="user_id" value="{{ $user->id }}"
+                                                            hidden>
+                                                        <button class="btn btn-outline-primary btn-sm ml-2">الشركه
 
+                                                        </button>
+                                                    </form>
+                                                @endif
 
-                                                <button class="btn btn-outline-danger btn-sm "
+                                                <button class="btn btn-outline-danger btn-sm mr-2"
                                                     data-pro_id="{{ $user->id }}" data-name="{{ $user->name }}"
                                                     data-toggle="modal" data-target="#exampleModal00">ارسال اشعار
                                                 </button>
-                                                {{-- 
-                                                <a class="btn btn-sm btn-info btn-sm ml-2"
-                                                    href="{{ route('userUpdate', $user->id) }}" title="تعديل">
-                                                    <i class="las la-pen"></i>
-                                                </a> --}}
+
+                                                <button class="btn btn-outline-danger btn-sm mr-2"
+                                                    data-pro_id="{{ $user->id }}" data-name="{{ $user->name }}"
+                                                    data-toggle="modal" data-target="#exampleModal000">شحن المحفظه
+                                                </button>
+
                                                 <form action="{{ route('userUpdate', $user->id) }}">
-                                                    <button class="btn btn-outline-success btn-sm ml-2">تعديل
+                                                    <button class="btn btn-outline-success btn-sm mr-2">تعديل
 
                                                     </button>
                                                 </form>
-                                                <button class="btn btn-outline-danger btn-sm "
+
+                                                <button class="btn btn-outline-danger btn-sm mr-2"
                                                     data-pro_id="{{ $user->id }}" data-name="{{ $user->name }}"
                                                     data-toggle="modal" data-target="#modaldemo9">حذف</button>
                                             </div>
@@ -270,7 +285,50 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="exampleModal000" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        {{-- <h5 class="modal-title" id="exampleModalLabel">ارسال اشعار للمستخدمين</h5> --}}
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('user.chargeWallet') }}" method="post">
+                        {{ csrf_field() }}
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">اسم الالمستخدم</label>
+                                <input type="text" class="form-control" id="name" name="name" readonly>
+                            </div>
 
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">قيمة المبلغ</label>
+                                <input type="text" class="form-control" id="money" name="money" required>
+                            </div>
+
+                            <input type="text" class="form-control" id="user_id" name="user_id" value=""
+                                hidden>
+                            <input type="text" class="form-control" id="type" name="type" value="one"
+                                hidden>
+
+
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">تاكيد</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
         <!-- add -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -489,7 +547,15 @@
                 });
             });
         });
+        $('#exampleModal000').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget)
+            var pro_id = button.data('pro_id')
+            var name = button.data('name')
+            var modal = $(this)
 
+            modal.find('.modal-body #user_id').val(pro_id);
+            modal.find('.modal-body #name').val(name);
+        })
         $('#exampleModal00').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget)
             var pro_id = button.data('pro_id')

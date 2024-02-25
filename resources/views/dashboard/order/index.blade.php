@@ -33,12 +33,12 @@
         .status {
             /* background-color: aqua; */
             /* color: aqua;
-                                                                                                                                                                                                                                                                                                                                                                        -moz-background-origin: border-box */
+                                                                                                                                                                                                                                                                                                                                                                                                            -moz-background-origin: border-box */
         }
 
         /* .btn-secondary {
-                                                                                                                                                                                background-color: #0049ff !important;
-                                                                                                                                                                            } */
+                                                                                                                                                                                                                    background-color: #0049ff !important;
+                                                                                                                                                                                                                } */
     </style>
 @endsection
 
@@ -118,6 +118,7 @@
                                     <th class="wd-14p border-bottom-0">طريقة الدفع</th>
                                     <th class="wd-14p border-bottom-0">تاريخ الإنشاء</th>
                                     <th class="wd-14p border-bottom-0">رقم البوليصه</th>
+                                    <th class="wd-14p border-bottom-0">اسم البائع</th>
                                     <th class="wd-14p border-bottom-0">العمليات</th>
 
                                 </tr>
@@ -218,6 +219,9 @@
                                         <td>{{ $order->total }}</td>
                                         <td>{{ $order->payment_method }}</td>
                                         <td>{{ $order->created_at }}</td>
+                                        <td>
+                                            <a href="{{ route('setting') }}">{{ $order->userShopes->name }}</a>
+                                        </td>
                                         <td>{{ $order->policy_number }}</td>
                                         <td>
                                             <a class="btn btn-sm btn-primary"

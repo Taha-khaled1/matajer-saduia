@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->float('total')->default(0);
             $table->string('image')->nullable();
+            $table->string('time')->nullable();
             $table->enum('type', ['drawn', 'suspended', 'won'])->default('suspended');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -161,6 +161,13 @@
                                     </div>
                                 </div>
                             </div>
+
+
+
+
+
+
+
                         </div><!-- main-profile-contact-list -->
                     </div>
                 </div>
@@ -229,6 +236,45 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group ">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">الرقم الضريبي<i>(مطلوب)</i></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" value="{{ $setting->idtax }}"
+                                        name="idtax" id="idtax" required>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group ">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">رقم الهوية<i>(مطلوب)</i></label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" value="{{ $setting->idnumber }}"
+                                        name="idnumber" id="idnumber" required>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group ">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">رقم السجل التجاري ان وجد<label>
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control"
+                                        value="{{ $setting->commercial_register }}" name="commercial_register"
+                                        id="commercial_register">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mb-4 main-content-label">المعلومات التواصل الاجتماعي</div>
                         <div class="form-group ">
                             <div class="row">

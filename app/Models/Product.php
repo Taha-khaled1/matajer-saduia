@@ -38,6 +38,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class, 'product_id');
     }
+    public function advertisement()
+    {
+        return $this->hasMany(Advertisement::class, 'product_id');
+    }
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

@@ -1,21 +1,22 @@
 <?php
 
 namespace App\Http\Controllers\Dashboard;
+
 use App\Http\Controllers\Controller;
 
 use App\Models\Withdrawal;
+use App\Traits\ImageProcessing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class WithdrawalMangmentController extends Controller
 {
-  
+    use ImageProcessing;
     public function index()
     {
-          $withdrawals=  Withdrawal::all();
-            return view('dashboard.withdrawal-mangment.index', compact('withdrawals'));
-        
+        $withdrawals =  Withdrawal::all();
+        return view('dashboard.withdrawal-mangment.index', compact('withdrawals'));
     }
 
 
@@ -23,9 +24,10 @@ class WithdrawalMangmentController extends Controller
     {
         $withdrawal = Withdrawal::find($request->id);
         $withdrawal->type = $request->type;
-        $withdrawal->save();   session()->flash('Add', 'تم تغيير الحاله بنجاح');
+        $withdrawal->save();
+        session()->flash('Add', 'تم تغيير الحاله بنجاح');
 
-           return redirect()->route('withdrawals.mangment')->with('success', 'withdrawal created successfully');
+        return redirect()->route('withdrawals.mangment')->with('success', 'withdrawal created successfully');
     }
 
 
@@ -41,16 +43,15 @@ class WithdrawalMangmentController extends Controller
         //     if ($validator->fails()) {
         //         return redirect()->back()->withErrors($validator)->withInput();
         //     }
-            $withdrawal = new Withdrawal;
-            $withdrawal->total = $request->input('price');
-            $withdrawal->type =  "suspended";
-            $withdrawal->user_id = Auth::user()->id;
-            // $withdrawal->id = md5(uniqid('', true));
-            $withdrawal->save();
-            session()->flash('Add', 'تم طلب السحب بانتظار الموافقه ... ');
+        $withdrawal = new Withdrawal;
+        $withdrawal->total = $request->input('price');
+        $withdrawal->type =  "suspended";
+        $withdrawal->user_id = Auth::user()->id;
+        // $withdrawal->id = md5(uniqid('', true));
+        $withdrawal->save();
+        session()->flash('Add', 'تم طلب السحب بانتظار الموافقه ... ');
 
-           return redirect()->route('withdrawals')->with('success', 'withdrawal created successfully');
-            
+        return redirect()->route('withdrawals')->with('success', 'withdrawal created successfully');
     }
 
     /**
@@ -63,7 +64,25 @@ class WithdrawalMangmentController extends Controller
     {
         //
     }
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Withdrawal  $withdrawal
+     * @return \Illuminate\Http\Response
+     */
+    public function closeWithdrawal(Request $request)
+    {
+        $data['image'] = $this->saveImage($request->file('image'), 'category');
+        // $category = new Withdrawal;
+        $category = Withdrawal::findOrFail($request->id);
+        $category->time = $request->input('time');
+        $category->image =  'imagesfp/category/' . $data['image'];
+        $category->type =  "drawn";
+        $category->save();
+        session()->flash('Add', 'تم تغيير الحاله بنجاح');
 
+        return redirect()->route('withdrawals.mangment')->with('success', 'withdrawal created successfully');
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -87,13 +106,13 @@ class WithdrawalMangmentController extends Controller
         //
     }
 
-   
+
     public function destroy(Request $request)
     {
         // return $request;
         $withdrawal = Withdrawal::find($request->id);
         $withdrawal->delete();
         session()->flash('delete', '  تم الحذف  ');
-     return redirect()->route('withdrawals.mangment')->with('success', 'withdrawal created successfully');
+        return redirect()->route('withdrawals.mangment')->with('success', 'withdrawal created successfully');
     }
 }

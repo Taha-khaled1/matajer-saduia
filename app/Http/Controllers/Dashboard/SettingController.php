@@ -11,10 +11,10 @@ use App\Models\SubCategory;
 use App\Traits\ImageProcessing;
 
 class SettingController extends Controller
-{   
-      function __construct()
+{
+    function __construct()
     {
-         $this->middleware('permission:الاعدادت الرئيسيه', ['only' => ['index','show','edit','store','update','destroy']]);
+        $this->middleware('permission:الاعدادت الرئيسيه', ['only' => ['index', 'show', 'edit', 'store', 'update', 'destroy']]);
         //  $this->middleware('permission:اعدادت الهدايا', ['only' => ['gift','updateGift']]);
         //  $this->middleware('permission:role-create', ['only' => ['create','store']]);
         //  $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
@@ -38,8 +38,8 @@ class SettingController extends Controller
 
     public function store(Request $request)
     {
-     
-          try {
+
+        try {
             $validator = Validator::make($request->all(), [
                 'username' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
@@ -52,7 +52,7 @@ class SettingController extends Controller
                 'linkedin' => 'nullable|string|max:255',
                 'aboutcompany' => 'nullable|string',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'user_id'=>'required'
+                'user_id' => 'required'
             ]);
 
             if ($validator->fails()) {
@@ -60,17 +60,20 @@ class SettingController extends Controller
             }
             $data = [
                 'company_name' => $request->username,
-                'email' => $request->email, 
+                'email' => $request->email,
                 'user_id' => $request->user_id,
-                 'isadmin' => false,
+                'isadmin' => false,
                 'company_phone' => $request->phone,
                 'company_address' => $request->address,
                 'twitter' => $request->twitter,
                 'facebook' => $request->facebook,
                 'google' => $request->google,
                 'linkedin' => $request->linkedin,
+                'idnumber' => $request->idnumber,
+                'commercial_register' => $request->commercial_register,
+                'idtax' => $request->idtax,
                 'biographical_information' => $request->aboutcompany,
-                
+
             ];
             $setting = new Setting;
             if ($request->hasFile('image')) {
@@ -99,56 +102,56 @@ class SettingController extends Controller
         //
     }
 
-public function update(Request $request)
-{
-    try {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'twitter' => 'nullable|string|max:255',
-            'facebook' => 'nullable|string|max:255',
-            'google' => 'nullable|string|max:255',
-            'linkedin' => 'nullable|string|max:255',
-            'aboutcompany' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+    public function update(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'username' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'phone' => 'nullable|string|max:20',
+                'address' => 'nullable|string|max:255',
+                'twitter' => 'nullable|string|max:255',
+                'facebook' => 'nullable|string|max:255',
+                'google' => 'nullable|string|max:255',
+                'linkedin' => 'nullable|string|max:255',
+                'aboutcompany' => 'nullable|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
 
-        if ($validator->fails()) {
-            session()->flash('delete', 'يوجد مشكله ما');
-            return back()->withErrors($validator)->withInput();
+            if ($validator->fails()) {
+                session()->flash('delete', 'يوجد مشكله ما');
+                return back()->withErrors($validator)->withInput();
+            }
+
+            $setting = Setting::findOrFail($request->user_id);
+
+
+
+            $data = [
+                'company_name' => $request->username,
+                'email' => $request->email,
+                // 'logo' => $data['logo'],
+                'company_phone' => $request->phone,
+                'company_address' => $request->address,
+                'twitter' => $request->twitter,
+                'facebook' => $request->facebook,
+                'google' => $request->google,
+                'linkedin' => $request->linkedin,
+                'biographical_information' => $request->aboutcompany,
+            ];
+            if ($request->hasFile('image')) {
+                $image = $this->saveImage($request->file('image'), 'setting');
+                $data['logo'] = 'imagesfp/setting/' . $image;
+            }
+            $setting->update($data);
+
+            session()->flash('Add', 'تم تحديث البيانات بنجاح');
+            return back();
+        } catch (\Throwable $th) {
+            session()->flash('error', 'حدث خطأ أثناء تحديث البيانات. يُرجى المحاولة مرة أخرى.');
+            return back();
         }
-
-        $setting = Setting::findOrFail($request->user_id);
-
-
-
-        $data = [
-            'company_name' => $request->username,
-            'email' => $request->email,
-            // 'logo' => $data['logo'],
-            'company_phone' => $request->phone,
-            'company_address' => $request->address,
-            'twitter' => $request->twitter,
-            'facebook' => $request->facebook,
-            'google' => $request->google,
-            'linkedin' => $request->linkedin,
-            'biographical_information' => $request->aboutcompany,
-        ];
-        if ($request->hasFile('image')) {
-            $image = $this->saveImage($request->file('image'), 'setting');
-            $data['logo'] = 'imagesfp/setting/' . $image;
-        }
-        $setting->update($data);
-
-        session()->flash('Add', 'تم تحديث البيانات بنجاح');
-        return back();
-    } catch (\Throwable $th) {
-        session()->flash('error', 'حدث خطأ أثناء تحديث البيانات. يُرجى المحاولة مرة أخرى.');
-        return back();
     }
-}
 
 
 

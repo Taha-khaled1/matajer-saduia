@@ -180,6 +180,7 @@ class CartItemController extends Controller
                     'merchant_info' => [
                         'id' => $merchant->id,
                         'name' => $merchant->name,
+                        'phone' => $merchant->phone,
                         'shipping_companies' => $merchant->shippingCompanies, //->where("name_ar", "asdasd"),  // Include any other merchant details you need
                     ],
                     'products' => $items->map(function ($item) {

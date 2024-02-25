@@ -27,6 +27,7 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string', 'max:100', 'regex:/^[\p{Arabic}\p{L}\s]+$/u'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'email:rfc', 'indisposable'], // 
             'password' => 'required|string|min:8',
+            'type' => 'required|string',
         ];
     }
 }

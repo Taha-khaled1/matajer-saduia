@@ -27,6 +27,22 @@ class UserController extends Controller
 
 
 
+    public function affiliateMarketer(Request $request)
+    {
+
+
+
+        $userdata = User::whereHas('roles', function ($query) {
+            $query->where('name', 'affiliate');
+        })->orderBy('id', 'DESC')
+            ->with('roles')
+            ->get();
+
+        $roles = Role::all();
+
+        return view('dashboard.user.index', compact('userdata', 'roles'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
+    }
     public function vendeors(Request $request)
     {
         $userdata = User::whereHas('roles', function ($query) {
@@ -40,14 +56,21 @@ class UserController extends Controller
         return view('dashboard.user.index', compact('userdata', 'roles'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
-
-
     public function userUpdate($id)
     {
         $roles = Role::all();
         $user = User::with('roles')->find($id);
 
         return view('dashboard.user.update-user', compact('user', 'roles'));
+    }
+    public function chargeWallet(Request $request)
+    {
+        // return $request;
+        $user = User::find($request->user_id);
+        $user->refund = $request->money;
+        $user->save();
+        session()->flash('Add', 'تم شحن محفظة المستخدم بنجاح');
+        return back();
     }
     /**
      * Show the form for creating a new resource.

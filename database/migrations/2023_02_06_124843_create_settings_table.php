@@ -23,6 +23,9 @@ return new class extends Migration
             $table->string('twitter')->nullable();
             $table->string('facebook')->nullable();
             $table->string('google')->nullable();
+            $table->string('commercial_register')->nullable();
+            $table->string('idtax')->nullable();
+            $table->string('idnumber')->nullable();
             $table->string('linkedin')->nullable();
             $table->string('github')->nullable();
             $table->text('biographical_information')->nullable();
