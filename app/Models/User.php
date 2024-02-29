@@ -24,6 +24,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Product::class, 'user_id');
     }
+    public function histories()
+    {
+        return $this->hasMany(History::class, 'user_id');
+    }
     /**
      * The attributes that are mass assignable.
      *

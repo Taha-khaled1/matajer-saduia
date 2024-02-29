@@ -9,6 +9,7 @@ use App\Http\Requests\SocialRegisterRequest;
 use App\Jobs\SendVerificationEmailJob;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use App\Models\ShippingCompanies;
 use App\Models\User;
 use App\Notifications\EmailverfyNotification;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class AuthController extends Controller
             throw new \Illuminate\Auth\AuthenticationException(__('custom.authentication_failed'));
         }
 
-        $user = Auth::user();
+        $user = auth()->user();
 
         if (!$user->email_verified_at) {
             throw new \Illuminate\Auth\AuthenticationException(__('custom.email_not_verified'));
@@ -65,6 +66,13 @@ class AuthController extends Controller
         $token = $user->createToken('Laravel Sanctum')->plainTextToken;
 
         $user->assignRole([$request->type ?? "user"]);
+        if ($request->type == "vendor") {
+            $category = new ShippingCompanies;
+            $category->name_ar = "شركة فيجن";
+            $category->cost = "40";
+            $category->user_id = $user->id;
+            $category->save();
+        }
         return response()->json(['token' => $token, 'message' => 'Success', 'status_code' => 200], 200);
     }
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\AdvertisementController;
 use App\Http\Controllers\Dashboard\BannerController;
+use App\Http\Controllers\Dashboard\BranchCompanyController;
 use App\Http\Controllers\Dashboard\CouponController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\ColorController;
@@ -31,7 +32,7 @@ Route::get('/products/affiliateProduct', [ProductController::class, 'affiliatePr
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/', function () {
-        if (Auth::User()->hasRole('admin')) {
+        if (auth()->user()->hasRole('admin')) {
             return redirect()->route('home')->with('success', 'successfully');
         } else if (Auth::User()->hasRole('vendor')) {
             return redirect()->route('vendorMain')->with('success', 'successfully');
@@ -40,6 +41,7 @@ Route::group(['middleware' => ['auth']], function () {
         }
     })->middleware('vendorshop');
 
+    Route::post('/branch_companies/update-status', [BranchCompanyController::class, 'updateStatusCatogery'])->name('branch_companies.update-status');
 
     Route::get('/orders-statistics', [DashboardController::class, 'getStatistics']);
 
@@ -55,7 +57,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/categories/update-status', [CategoryController::class, 'updateStatusCatogery'])->name('categories.update-status');
     Route::post('/subcategories/update-status', [SubCatogeryController::class, 'updateStatusCatogery'])->name('subcategories.update-status');
     Route::post('/advertisements/update-status', [AdvertisementController::class, 'updateStatusCatogery'])->name('advertisements.update-status');
-
+    Route::resource('branch_companies', BranchCompanyController::class);
     Route::controller(ContactUsController::class)->group(function () {
         Route::get('/contactus', 'index')->name('contactus');
 
@@ -143,6 +145,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/user/disable/cash_on_delivery', 'disableCashOnDelivery')->name('user.cash_on_delivery');
         Route::get('/userUpdate/{id}', 'userUpdate')->name('userUpdate');
         Route::get('/user/vendeors', 'vendeors')->name('user.vendeors');
+        Route::get('/user/SubscrebtionVendeors', 'SubscrebtionVendeors')->name('user.SubscrebtionVendeors');
         Route::get('/user/affiliate', 'affiliateMarketer')->name('user.affiliate');
         Route::post('/user/chargeWallet', 'chargeWallet')->name('user.chargeWallet');
     });

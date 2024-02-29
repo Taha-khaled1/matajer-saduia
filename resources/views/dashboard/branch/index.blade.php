@@ -25,10 +25,6 @@
             height: 100%;
             object-fit: cover;
         }
-
-        .top-m {
-            top: 20;
-        }
     </style>
 @endsection
 
@@ -38,7 +34,7 @@
         <div class="my-auto">
             <div class="d-flex">
                 <h4 class="content-title mb-0 my-auto">الاقسام /</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">جميع
-                    الاقسام</span>
+                    فروع الشركه</span>
             </div>
         </div>
 
@@ -89,32 +85,22 @@
 
         <div class="col-xl-12">
             <div class="card">
+                <div class="col-sm-6 col-md-4 col-xl-3">
+                    <a class="modal-effect btn btn-outline-primary btn-block" data-effect="effect-scale" data-toggle="modal"
+                        href="#modaldemo8">اضافة فرع الشركه</a>
 
-                <div class="button-container">
-
-                    <a class="modal-effect btn btn-outline-primary mr-2" style="width: 300px;" data-effect="effect-scale"
-                        data-toggle="modal" href="#modaldemo8">اضافة شركة شحن</a>
-
-                    <a class="modal-effect btn btn-outline-primary mr-2" style="width: 300px;" data-effect="effect-scale"
-                        data-toggle="modal" href="#exampleModal0">اضافة مكان التوصيل
-                        المستخدمين</a>
                 </div>
-
-
-
-
-
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table text-md-nowrap" id="example1">
                             <thead>
                                 <tr>
-                                    <th class="wd-15p border-bottom-0">رقم شركة الشحن</th>
-                                    <th class="wd-15p border-bottom-0">اسم شركة الشحن</th>
-                                    <th class="wd-15p border-bottom-0">تلكفة شركة الشحن</th>
-                                    <th class="wd-15p border-bottom-0">وقت الانشاء</th>
-                                    {{-- <th class="wd-15p border-bottom-0">العمليات</th> --}}
-
+                                    <th class="wd-15p border-bottom-0">رقم فرع الشركه</th>
+                                    <th class="wd-15p border-bottom-0">اسم فرع الشركه</th>
+                                    <th class="wd-15p border-bottom-0">الدوله</th>
+                                    <th class="wd-15p border-bottom-0">المدينه</th>
+                                    <th class="wd-20p border-bottom-0">العنوان</th>
+                                    <th class="wd-20p border-bottom-0">العمليات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -123,36 +109,31 @@
                                     $i = 0;
                                 @endphp
 
-                                @foreach ($shipping_companies as $catogery)
+                                @foreach ($branch_companies as $branch)
                                     @php
                                         $i++;
                                     @endphp
 
                                     <tr>
                                         <td>{{ $i }}</td>
-                                        <td>{{ $catogery->name_ar }}</td>
-                                        <td>{{ $catogery->cost }}</td>
-                                        <td>{{ $catogery->created_at }}</td>
-                                        {{-- <td>
-                                            <div class="d-flex">
-                                           
-                                                <a class="modal-effect btn btn-sm btn-info btn-sm ml-2"
-                                                    data-effect="effect-scale" data-id="{{ $catogery->id }}"
-                                                    data-name_ar="{{ $catogery->name_ar }}" href="#exampleModal2"
-                                                    title="تعديل"><i class="las la-pen">
 
-                                                    </i>
-                                                </a>
+                                        <td>{{ $branch->name_ar }}</td>
+                                        <td>{{ $branch->country }}</td>
+                                        <td>{{ $branch->city }}</td>
+                                        <td>{{ $branch->description_ar }}</td>
+                                        {{-- <td>{{ $branch->created_at }}</td> --}}
+                                        <td>
+                                            <div class="d-flex">
 
 
 
                                                 <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
-                                                    data-id="{{ $catogery->id }}" data-name="{{ $catogery->name_ar }}"
+                                                    data-id="{{ $branch->id }}" data-name="{{ $branch->name_ar }}"
                                                     data-toggle="modal" href="#modaldemo9" title="حذف"><i
                                                         class="las la-trash"></i></a>
                                             </div>
 
-                                        </td> --}}
+                                        </td>
                                     </tr>
                                 @endforeach
 
@@ -161,8 +142,6 @@
                             </tbody>
                         </table>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -171,42 +150,29 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
-                        <h6 class="modal-title">اضافة شركة شحن</h6><button aria-label="Close" class="close"
+                        <h6 class="modal-title">اضافة فرع الشركه</h6><button aria-label="Close" class="close"
                             data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('shipping_companies.store') }}" method="post"
-                            enctype="multipart/form-data">
+                        <form action="{{ route('branch_companies.store') }}" method="post" enctype="multipart/form-data">
                             {{ csrf_field() }}
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1">اسم شركة الشحن باللغه العربيه</label>
+                                <label for="exampleInputEmail1">اسم فرع الشركه باللغه العربيه</label>
                                 <input type="text" class="form-control" id="name_ar" name="name_ar" required>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">تكلفة السحن</label>
-                                <input type="number" class="form-control" id="cost" name="cost" required>
-                            </div>
-                            {{-- <div class="form-group">
-                                <label for="exampleInputEmail1">اسم شركة الشحن باللغه الانجليزيه</label>
-                                <input type="text" class="form-control" id="name_en" name="name_en" required>
+                                <label for="exampleInputEmail1">الدوله</label>
+                                <input type="text" class="form-control" id="country" name="country" required>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">ترتيب شركة الشحن </label>
-                                <input type="number" class="form-control" id="arrange" name="arrange">
+                                <label for="exampleInputEmail1">المدينه</label>
+                                <input type="text" class="form-control" id="city" name="city">
                             </div>
-
                             <div class="form-group">
-                                <label for="image">تحميل صوره للشركة شحن </label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="image" name="image"
-                                        required>
-                                    <label class="custom-file-label" for="image">اختار صوره</label>
-                                </div>
-                                <img src="#" id="preview"
-                                    style="display: none; max-width: 200px; max-height: 200px;">
-                            </div> --}}
-
+                                <label for="exampleInputEmail1">العنوان</label>
+                                <input type="text" class="form-control" id="s" name="description_ar">
+                            </div>
 
 
 
@@ -226,13 +192,13 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">تعديل شركة الشحن</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">تعديل فرع الشركه</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('shipping_companies.update', 0) }}" method="post"
+                        <form action="{{ route('branch_companies.update', 0) }}" method="post"
                             enctype="multipart/form-data">
                             {{ method_field('PUT') }}
                             {{ csrf_field() }}
@@ -241,25 +207,33 @@
                             {{-- <input type="hidden" name="status" id="status" value=""> --}}
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1">اسم شركة الشحن باللغه العربيه</label>
+                                <label for="exampleInputEmail1">اسم فرع الشركه باللغه العربيه</label>
                                 <input type="text" class="form-control" id="name_ar" name="name_ar" required>
                             </div>
-                            {{-- <div class="form-group">
-                                <label for="exampleInputEmail1">اسم شركة الشحن باللغه الانجليزيه</label>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">اسم فرع الشركه باللغه الانجليزيه</label>
                                 <input type="text" class="form-control" id="name_en" name="name_en" required>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">ترتيب شركة الشحن </label>
+                                <label for="exampleInputEmail1">ترتيب فرع الشركه </label>
                                 <input type="number" class="form-control" id="arrange" name="arrange" required>
                             </div>
-
+                            {{-- <div class="form-group">
+                                <p class="mg-b-10">ظهور في الصفحه الرئيسيه</p>
+                                <select id="is_home" name="is_home" class="form-control SlectBox">
+                                    <option value="true" @if (isset($is_home) && $is_home == true) selected @endif>اظهار داخل
+                                        الصفحه الرئيسيه</option>
+                                    <option value="false" @if (isset($is_home) && $is_home != true) selected @endif>الاخفاء من
+                                        الصفحه الرئيسيه</option>
+                                </select>
+                            </div> --}}
                             <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">صوره شركة الشحن</label>
+                                <label for="recipient-name" class="col-form-label">صوره فرع الشركه</label>
                                 <input class="form-control" name="image" id="image" type="file"
                                     onchange="displaySelectedImage(event)">
                                 <img src="image" id="preview-image" class="img-thumbnail"
                                     style="width: 100px; height: 100px;">
-                            </div> --}}
+                            </div>
 
                     </div>
                     <div class="modal-footer">
@@ -276,12 +250,12 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
-                        <h6 class="modal-title">حذف شركة الشحن</h6>
+                        <h6 class="modal-title">حذف فرع الشركه</h6>
                         <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="{{ route('shipping_companies.destroy', 0) }}" method="post">
+                    <form action="{{ route('branch_companies.destroy', 0) }}" method="post">
                         {{ method_field('DELETE') }}
                         {{ csrf_field() }}
                         <div class="modal-body">
@@ -338,6 +312,90 @@
         })
     </script>
 
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            $('.main-toggle').on('click', function() {
+                $(this).toggleClass('on');
+                var isToggleOn = $(this).hasClass('on');
+                var url = '{{ route('branch_companies.update-status') }}';
+                var categoryId = $(this).data('branch-id');
+                // Retrieve the CSRF token value from the meta tag
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        isToggleOn: isToggleOn,
+                        categoryId: categoryId
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        // Handle the success response
+                    },
+                    error: function(error) {
+                        console.log(error);
+                        // Handle the error response
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+    <script>
+        document.querySelector("#image").addEventListener("change", function() {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector("#preview").setAttribute("src", e.target.result);
+                document.querySelector("#preview").style.display = "block";
+            };
+            reader.readAsDataURL(this.files[0]);
+        });
+
+
+        function displaySelectedImage(event) {
+            const fileInput = event.target;
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById('preview-image');
+                    previewImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#preview').attr('src', e.target.result).show();
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+
+
+
+
     <script>
         const appUrl = "{{ url('/') }}";
         $(document).ready(function() {
@@ -347,11 +405,18 @@
                 var name_ar = button.data('name_ar')
                 var name_en = button.data('name_en')
                 var arrange = button.data('arrange')
+                var is_home = button.data('is_home')
                 var status = button.data('status')
                 var image = button.data('image')
                 var modal = $(this)
                 modal.find('.modal-body #id').val(id)
                 modal.find('.modal-body #name_ar').val(name_ar)
+                modal.find('.modal-body #is_home option').each(function() {
+                    if ($(this).val() == is_home) {
+                        $(this).prop('selected', true);
+                    }
+                });
+
                 modal.find('.modal-body #preview-image').attr('src', appUrl + "/" + image)
                 modal.find('.modal-body #name_en').val(name_en)
                 modal.find('.modal-body #arrange').val(arrange)

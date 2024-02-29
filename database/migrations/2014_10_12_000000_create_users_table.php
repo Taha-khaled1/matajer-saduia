@@ -17,6 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('name', 100);
             $table->enum('type', ['user', 'admin', 'vendor', 'affiliate'])->default('user');
+            $table->enum('subscription', ['silver', 'golden', 'normal'])->default('normal');
+            $table->timestamp('subscription_at')->nullable()->default(now());
             $table->text('fcm')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('cash_on_delivery')->default(true);

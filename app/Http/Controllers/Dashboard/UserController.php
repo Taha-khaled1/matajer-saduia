@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use App\Models\History;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -20,7 +21,8 @@ class UserController extends Controller
             ->with('roles')
             ->get();
         $roles = Role::all();
-        return view('dashboard.user.index', compact('userdata', 'roles'))
+        $histories = History::with('user')->get();
+        return view('dashboard.user.index', compact('userdata', 'roles', 'histories'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
@@ -30,7 +32,7 @@ class UserController extends Controller
     public function affiliateMarketer(Request $request)
     {
 
-
+        $histories = History::with('user')->get();
 
         $userdata = User::whereHas('roles', function ($query) {
             $query->where('name', 'affiliate');
@@ -40,7 +42,7 @@ class UserController extends Controller
 
         $roles = Role::all();
 
-        return view('dashboard.user.index', compact('userdata', 'roles'))
+        return view('dashboard.user.index', compact('userdata', 'roles', 'histories'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     public function vendeors(Request $request)
@@ -56,6 +58,19 @@ class UserController extends Controller
         return view('dashboard.user.index', compact('userdata', 'roles'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
+    public function SubscrebtionVendeors(Request $request)
+    {
+        $userdata = User::whereHas('roles', function ($query) {
+            $query->where('name', 'vendor');
+        })->orderBy('id', 'DESC')
+            ->with('roles')
+            ->get();
+
+        $roles = Role::all();
+
+        return view('dashboard.user.subsecription', compact('userdata', 'roles'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
+    }
     public function userUpdate($id)
     {
         $roles = Role::all();
@@ -69,6 +84,10 @@ class UserController extends Controller
         $user = User::find($request->user_id);
         $user->refund = $request->money;
         $user->save();
+        $his = new History();
+        $his->money = $request->money;
+        $his->user_id = $request->user_id;
+        $his->save();
         session()->flash('Add', 'تم شحن محفظة المستخدم بنجاح');
         return back();
     }

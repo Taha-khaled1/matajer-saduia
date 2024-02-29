@@ -122,9 +122,10 @@
                                     <th class="border-bottom-0">البريد الاكتروني</th>
                                     <th class="border-bottom-0">المحفظه</th>
                                     <th class="border-bottom-0">صلاحيات المستخدم</th>
-                                    <th class="border-bottom-0">حالة المستخدم</th>
-                                    {{-- <th class="border-bottom-0">الدفع عند الاسلام</th> --}}
-                                    <th class="border-bottom-0"> العمليات</th>
+                                    <th class="border-bottom-0">نوع الاشتراك</th>
+                                    <th class="border-bottom-0">تاريخ الاشتراك</th>
+                                    {{-- <th class="border-bottom-0">حالة المستخدم</th>
+                                    <th class="border-bottom-0"> العمليات</th> --}}
 
                                 </tr>
                             </thead>
@@ -139,19 +140,17 @@
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->refund }}</td>
                                         <td>{{ roleToArabic($user->roles[0]['name']) }}</td>
-                                        <td>
+                                        <td>{{ ($user->subscription == 'silver' ? 'فضي' : $user->subscription == 'golden') ? 'الذهبي' : 'العادي' }}
+                                        </td>
+                                        <td>{{ $user->subscription_at }}</td>
+                                        {{-- <td>
                                             <div class="main-toggle main-toggle-success {{ $user->status == 1 ? 'on' : '' }} btn-sm ml-2"
                                                 data-user-id="{{ $user->id }}" id="main-toggle">
                                                 <span></span>
                                             </div>
-                                        </td>
-                                        {{-- <td>
-                                            <div class="main-toggle main-toggle-success {{ $user->cash_on_delivery == 1 ? 'on' : '' }} btn-sm ml-2"
-                                                data-user-id="{{ $user->id }}" id="cash_on_delivery">
-                                                <span></span>
-                                            </div>
                                         </td> --}}
-                                        <td>
+
+                                        {{-- <td>
                                             <div class="d-flex">
 
 
@@ -188,56 +187,6 @@
                                                     data-pro_id="{{ $user->id }}" data-name="{{ $user->name }}"
                                                     data-toggle="modal" data-target="#modaldemo9">حذف</button>
                                             </div>
-                                        </td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <div class="card mg-b-20">
-
-
-
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="example" class="table key-buttons text-md-nowrap" data-page-length='50'>
-                            <thead>
-                                <tr>
-                                    <th class="border-bottom-0">#</th>
-                                    <th class="border-bottom-0">اسم المستخدم</th>
-                                    <th class="border-bottom-0">المبلغ</th>
-                                    <th class="border-bottom-0">التاريخ</th>
-                                    <th class="border-bottom-0">المحفظه</th>
-                                    <th class="border-bottom-0">المحفظه</th>
-                                    {{-- <th class="border-bottom-0"> العمليات</th> --}}
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $i = 0; ?>
-                                @foreach ($histories as $historie)
-                                    <?php $i++; ?>
-                                    <tr>
-                                        <td>{{ $i }}</td>
-                                        <td>{{ $historie->user->name }}</td>
-                                        <td>{{ $historie->money ?? 0 }}</td>
-                                        <td>{{ $historie->created_at ?? 0 }}</td>
-                                        <td>{{ $historie->user->refund }}</td>
-                                        <td>{{ $historie->user->refund }}</td>
-
-
-                                        {{-- <td>
-                                            <div class="d-flex">
-                                                <button class="btn btn-outline-danger btn-sm mr-2"
-                                                    data-pro_id="{{ $historie->id }}" data-name="{{ $historie->name }}"
-                                                    data-toggle="modal" data-target="#modaldemo9">حذف</button>
-                                            </div>
                                         </td> --}}
 
                                     </tr>
@@ -246,11 +195,14 @@
                         </table>
                     </div>
                 </div>
-                >
+
             </div>
+
+
+
             <!-- not -->
-            <div class="modal fade" id="exampleModal0" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="exampleModal0" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -533,73 +485,6 @@
 @endsection
 @section('js')
     <script>
-        $(document).ready(function() {
-            $('#cash_on_delivery').on('click', function() {
-                $(this).toggleClass('on');
-                var isToggleOn = $(this).hasClass('on');
-                var url = '{{ route('user.cash_on_delivery') }}';
-                var userId = $(this).data('user-id');
-                // Retrieve the CSRF token value from the meta tag
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                });
-
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: {
-                        isToggleOn: isToggleOn,
-                        userId: userId
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        // Handle the success response
-                    },
-                    error: function(error) {
-                        console.log(error);
-                        // Handle the error response
-                    }
-                });
-            });
-        });
-
-        $(document).ready(function() {
-            $('#main-toggle').on('click', function() {
-                $(this).toggleClass('on');
-                var isToggleOn = $(this).hasClass('on');
-                var url = '{{ route('userCreate') }}';
-                var userId = $(this).data('user-id');
-                // Retrieve the CSRF token value from the meta tag
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                });
-
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: {
-                        isToggleOn: isToggleOn,
-                        userId: userId
-                    },
-                    success: function(response) {
-                        console.log(response);
-                        // Handle the success response
-                    },
-                    error: function(error) {
-                        console.log(error);
-                        // Handle the error response
-                    }
-                });
-            });
-        });
         $('#exampleModal000').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget)
             var pro_id = button.data('pro_id')
