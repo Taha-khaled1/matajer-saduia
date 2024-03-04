@@ -91,9 +91,9 @@
                             <a class="modal-effect btn btn-outline-primary d-inline-block" data-effect="effect-scale"
                                 data-toggle="modal" href="#modaldemo8">اضافة اعلان</a>
 
-                            <a class="modal-effect btn btn-outline-primary d-inline-block mr-2" style="width: 300px;"
+                            {{-- <a class="modal-effect btn btn-outline-primary d-inline-block mr-2" style="width: 300px;"
                                 data-effect="effect-scale" data-toggle="modal" href="#exampleModal0">ارسال اشعار لجميع
-                                المستخدمين</a>
+                                المستخدمين</a> --}}
                         </div>
                     </div>
                 </div>
@@ -148,19 +148,18 @@
                                                         data-catogery-id="{{ $catogery->id }}">
                                                         <span></span>
                                                     </div>
+
+                                                    <a class="modal-effect btn btn-sm btn-info btn-sm ml-2"
+                                                        data-effect="effect-scale" data-id="{{ $catogery->id }}"
+                                                        data-name="{{ $catogery->name }}"
+                                                        data-status="{{ $catogery->status }}"
+                                                        data-link="{{ $catogery->link }}" data-image="{{ $catogery->image }}"
+                                                        data-toggle="modal" href="#exampleModal2" title="تعديل"><i
+                                                            class="las la-pen">
+
+                                                        </i>
+                                                    </a>
                                                 @endcan
-                                                <a class="modal-effect btn btn-sm btn-info btn-sm ml-2"
-                                                    data-effect="effect-scale" data-id="{{ $catogery->id }}"
-                                                    data-name="{{ $catogery->name }}"
-                                                    data-status="{{ $catogery->status }}"
-                                                    data-link="{{ $catogery->link }}" data-image="{{ $catogery->image }}"
-                                                    data-toggle="modal" href="#exampleModal2" title="تعديل"><i
-                                                        class="las la-pen">
-
-                                                    </i>
-                                                </a>
-
-
 
                                                 <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
                                                     data-id="{{ $catogery->id }}" data-name="{{ $catogery->name }}"
@@ -236,10 +235,22 @@
                                 <input type="text" class="form-control" id="name" name="name" required>
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="exampleInputEmail1">الرابط </label>
-                                <input type="number" class="form-control" id="link" name="link">
+                                <input type="text" class="form-control" id="link" name="link">
+                            </div> --}}
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">الرابط / الوصف</label>
+                                <input type="text" class="form-control" id="link" name="link">
                             </div>
+                            <div class="col-lg">
+                                <p class="mg-b-10">النوع</p>
+                                <select id="type" name="type" class="form-control SlectBox" required>
+                                    <option value="ads" selected>اعلان</option>
+                                    <option value="notf">اشعار</option>
+                                </select>
+                            </div>
+
 
                             <div class="form-group">
                                 <label for="image">تحميل صوره للاعلان </label>

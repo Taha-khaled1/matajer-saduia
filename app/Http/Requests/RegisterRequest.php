@@ -28,6 +28,8 @@ class RegisterRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'email:rfc', 'indisposable'], // 
             'password' => 'required|string|min:8',
             'type' => 'required|string',
+            'invitation_code' => 'nullable|string',
+
         ];
     }
 }

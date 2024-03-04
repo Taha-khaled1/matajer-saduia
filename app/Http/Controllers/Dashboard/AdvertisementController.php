@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Jobs\SendFCMNotificationJob;
 use App\Models\Advertisement;
+use App\Notifications\AdminMessage;
 use App\Traits\ImageProcessing;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class AdvertisementController extends Controller
@@ -14,7 +19,15 @@ class AdvertisementController extends Controller
 
     public function index()
     {
-        $advertisements = Advertisement::orderByDesc('created_at')->get();
+        $user = Auth::user();
+        $advertisements = new Advertisement();
+        if ($user->hasRole('admin')) {
+            $advertisements = Advertisement::orderByDesc('created_at')->get();
+        } else {
+            $advertisements = Advertisement::where("user_id", $user->id)->orderByDesc('created_at')->get();
+        }
+
+
         return view('dashboard.advertisement.index', compact('advertisements'));
     }
 
@@ -27,7 +40,7 @@ class AdvertisementController extends Controller
 
     public function store(Request $request)
     {
-
+        // return $request;
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:advertisements|max:100',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -50,9 +63,10 @@ class AdvertisementController extends Controller
         $category = new Advertisement;
         $category->name = $request->input('name');
         $category->image =  'imagesfp/category/' . $data['image'];
-        // $category->status = $request->input('status', true);
+        $category->type = $request->input('type');
         $category->link = $request->input('link');
         $category->product_id = $request->input('product_id', 1);
+        $category->user_id = Auth::user()->id;
         $category->save();
         session()->flash('Add', 'تم اضافة الاعلان بنجاح ');
 
@@ -78,7 +92,22 @@ class AdvertisementController extends Controller
             // Update the status field
             $category->status = $status;
             $category->save();
+            if ($category->type == "notf") {
+                $messageFromAdmin = $category->name;
+                $titleFromAdmin = $category->name;
 
+                $users = User::all();  // or any filtered list of users
+
+                // Sending Notification via Database
+                Notification::send($users, new AdminMessage($messageFromAdmin, $titleFromAdmin));
+
+                // Dispatch Job for Each User with FCM Token
+                foreach ($users as $user) {
+                    if ($user->fcm) {
+                        SendFCMNotificationJob::dispatch($user->fcm, $titleFromAdmin, $messageFromAdmin);
+                    }
+                }
+            }
             return response()->json(['success' => true, 'message' => 'category status  updated successfully']);
         }
 

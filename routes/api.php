@@ -53,6 +53,7 @@ Route::group(['middleware' => 'ChangeLanguage'], function () {
         Route::post('/login', 'login');
         Route::post('/logout', 'logout')->middleware('sanctum');
         Route::post('/register', 'register');
+        Route::get('/users/ads', 'getAds');
         Route::post('/social/register', 'socialRegister');
     });
     Route::get('getOtpForUser', [UserController::class, 'getOtpForUser']);
@@ -74,7 +75,7 @@ Route::group(['middleware' => 'ChangeLanguage'], function () {
         Route::controller(OrderController::class)->group(function () {
             Route::get('/orders', 'userOrder');
             Route::get('/orders/detalis/{id}', 'orderDetalis');
-
+            Route::get('/users/for/affalite', 'getUsersforAffalite');
             Route::post('/orders/cancel', 'cancelOrder');
             Route::post('/orders/reorder', 'Reorder');
         });

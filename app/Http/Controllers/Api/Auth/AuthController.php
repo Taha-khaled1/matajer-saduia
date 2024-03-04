@@ -9,6 +9,7 @@ use App\Http\Requests\SocialRegisterRequest;
 use App\Jobs\SendVerificationEmailJob;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use App\Models\Advertisement;
 use App\Models\ShippingCompanies;
 use App\Models\User;
 use App\Notifications\EmailverfyNotification;
@@ -53,13 +54,30 @@ class AuthController extends Controller
         return response()->json(['message' => 'Success', 'status_code' => 200,], 200);
     }
 
+    public function getAds(Request $request)
+    {
 
+        $ads = Advertisement::where("status", true)->where("show", false)->where("type", "ads")->first();
+
+        return response()->json([
+            "data" => $ads,
+            'message' => 'Success', 'status_code' => 200,
+        ], 200);
+    }
 
 
     public function register(RegisterRequest $request)
     {
-        // return $request;
-        $user = $this->createUser($request->validated());
+        if ($request->has('invitation_code')) {
+            $referrer = User::where('invitation_code', $request->invitation_code)->first();
+
+            if ($referrer) {
+                // Set the referrer_id to the affiliate marketer's ID
+                $request['referrer_id'] = $referrer->id;
+            }
+        }
+
+        $user = $this->createUser($request->validated(), $request['referrer_id']);
 
         SendVerificationEmailJob::dispatch($user);
 
@@ -125,13 +143,16 @@ class AuthController extends Controller
         }
     }
 
-    private function createUser(array $data)
+    private function createUser(array $data, $referrer_id = null)
     {
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'type' => $data['type'],
+            'referrer_id' => $referrer_id,
             'fcm' => $data['fcm'] ?? "test",
             'password' => Hash::make($data['password']),
+            "invitation_code" => generateUniqueInvitationCode(),
         ]);
     }
 }

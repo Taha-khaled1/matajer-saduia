@@ -85,6 +85,18 @@ function roleToArabic($status)
         return 'مستخدم';
     }
 }
+function generateUniqueInvitationCode()
+{
+    // Generate a unique random code, for example, a combination of letters and numbers
+    $code = strtoupper(substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 10));
+
+    // Check if the generated code already exists in the database
+    while (User::where('invitation_code', $code)->exists()) {
+        $code = strtoupper(substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 10));
+    }
+
+    return $code;
+}
 
 
 function statusPayment($status)

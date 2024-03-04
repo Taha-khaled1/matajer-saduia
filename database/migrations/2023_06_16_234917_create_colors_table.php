@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name_en', 50);
             $table->string('name_ar', 50);
             $table->string('color_code',50)->nullable();
-            // indexes
+    
             $table->index('name_en');
             $table->index('name_ar');
         });

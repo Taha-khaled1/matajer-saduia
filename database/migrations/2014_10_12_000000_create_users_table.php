@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('subscription', ['silver', 'golden', 'normal'])->default('normal');
             $table->timestamp('subscription_at')->nullable()->default(now());
             $table->text('fcm')->nullable();
+            $table->string('invitation_code')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('cash_on_delivery')->default(true);
             $table->string('email')->unique();
@@ -28,6 +29,8 @@ return new class extends Migration
             $table->string('password');
             $table->float('refund')->default(0)->nullable();
             $table->boolean('isfirst')->default(true);
+            $table->unsignedBigInteger('referrer_id')->nullable();
+            $table->foreign('referrer_id')->references('id')->on('users')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -18,8 +18,6 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class OrderController extends Controller
 {
-
-
     function userOrder(Request $request)
     {
         try {
@@ -60,8 +58,6 @@ class OrderController extends Controller
             return response()->json(['message' => __('custom.failed_to_retrieve_data'), 'error' => $th->getMessage()], 500);
         }
     }
-
-
     function orderDetalis($id)
     {
         try {
@@ -92,8 +88,6 @@ class OrderController extends Controller
             return response()->json(['message' => __('custom.failed_to_retrieve_data'), 'error' => $th->getMessage()], 500);
         }
     }
-
-    //http://localhost/khaymat/public/api
     public function saveOrder(Request $request)
     {
 
@@ -189,12 +183,7 @@ class OrderController extends Controller
                 }
             }
 
-            // // Clear the cart after creating orders
-            // // CartItem::where('user_id', $userId)->delete();
 
-            // // Update user's first order flag
-            // $user->isfirst = false;
-            // $user->save();
 
             // DB::table('order_items')->insert($orderItems);
             if ($paymentMethod != 'paypal' && $paymentMethod != 'stripe') {
@@ -204,11 +193,6 @@ class OrderController extends Controller
             DB::commit();
             if ($paymentMethod == 'paypal') {
                 // return redirect()->route('payment', [
-                //     'orderItems' => $orderItems,
-                //     'order_id' => $orderId,
-                // ]);
-            } else if ($paymentMethod == 'stripe') {
-                // return redirect()->route('stripe', [
                 //     'orderItems' => $orderItems,
                 //     'order_id' => $orderId,
                 // ]);
@@ -281,8 +265,6 @@ class OrderController extends Controller
             ], 500);
         }
     }
-
-
     public function calculateTotalAndPrices($cartItems, $coupon = 0)
     {
         $total_shipping_fee = 0.0;
@@ -307,5 +289,23 @@ class OrderController extends Controller
             // ],
             // 'status_code' => 200
         ], 200);
+    }
+    function getUsersforAffalite(Request $request)
+    {
+        try {
+            $user = $request->user;
+            $users = User::where("referrer_id", $user->id)->get();
+
+            return response()->json([
+                'message' => 'Success',
+                'status_code' => 200,
+                "data" => $users,
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => __('custom.failed_to_cancel_order'),
+                'status_code' => 500,
+            ], 500);
+        }
     }
 }

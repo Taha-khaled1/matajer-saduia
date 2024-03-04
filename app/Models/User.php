@@ -28,6 +28,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(History::class, 'user_id');
     }
+    public function referredUsers()
+    {
+        return $this->hasMany(User::class, 'referrer_id');
+    }
+
+    // The affiliate marketer who referred this user
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referrer_id');
+    }
     /**
      * The attributes that are mass assignable.
      *
