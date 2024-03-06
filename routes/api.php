@@ -54,6 +54,8 @@ Route::group(['middleware' => 'ChangeLanguage'], function () {
         Route::post('/logout', 'logout')->middleware('sanctum');
         Route::post('/register', 'register');
         Route::get('/users/ads', 'getAds');
+        Route::get('/users/mosaoq', 'getRepoerts')->middleware('sanctum');
+        Route::get('/users/getmange', 'getmange')->middleware('sanctum');
         Route::post('/social/register', 'socialRegister');
     });
     Route::get('getOtpForUser', [UserController::class, 'getOtpForUser']);

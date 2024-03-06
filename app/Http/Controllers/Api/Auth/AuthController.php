@@ -7,9 +7,11 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\SocialRegisterRequest;
 use App\Jobs\SendVerificationEmailJob;
+use App\Models\MarketersReports;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Models\Advertisement;
+use App\Models\Order;
 use App\Models\ShippingCompanies;
 use App\Models\User;
 use App\Notifications\EmailverfyNotification;
@@ -65,7 +67,30 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function getRepoerts(Request $request)
+    {
+        $user = $request->user;
 
+        $reports = MarketersReports::where("user_id", $user->id)->where("status", "procedure")->with("order")->get();
+        // MarketersReports::where("user_id", $user->id)->with("user.mosaoqOrders")->get();
+
+        return response()->json([
+            "data" => $reports,
+            'message' => 'Success', 'status_code' => 200,
+        ], 200);
+    }
+    public function getmange(Request $request)
+    {
+        $user = $request->user;
+
+        $reports = MarketersReports::where("user_id", $user->id)->where("status", "sold")->with("order")->get();
+        // MarketersReports::where("user_id", $user->id)->with("user.mosaoqOrders")->get();
+
+        return response()->json([
+            "data" => $reports,
+            'message' => 'Success', 'status_code' => 200,
+        ], 200);
+    }
     public function register(RegisterRequest $request)
     {
         if ($request->has('invitation_code')) {

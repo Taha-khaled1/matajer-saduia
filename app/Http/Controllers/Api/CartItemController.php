@@ -7,14 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Models\CartItem;
 use App\Models\Country;
 use App\Models\Coupon;
-use App\Models\Gift;
-use App\Models\Setting;
-use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Sanctum\PersonalAccessToken;
+
 
 class CartItemController extends Controller
 {
@@ -207,10 +204,6 @@ class CartItemController extends Controller
                     }),
                 ];
             })->values(); // هنا تتم إضافة values() لحذف المفاتيح العشوائية والاحتفاظ فقط بالقيم.
-
-
-
-
             return response()->json([
                 'cart_items_by_merchant' => $itemsByMerchant,
                 'cart_prices' => $dataPrices->original,

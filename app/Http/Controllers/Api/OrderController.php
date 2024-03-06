@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CartItem;
 use App\Models\Country;
 use App\Models\Coupon;
+use App\Models\MarketersReports;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\UserAddress;
@@ -169,9 +170,18 @@ class OrderController extends Controller
                     'user_id' => $userId,
                     'created_at' => now(),
                     'user_address_id' => $userAddressId,
+                    'mosaoq_id' => $user->referrer_id,
                     'coupon_id' => $copon->id ?? null,
                     'shope_id' => $shopeId, // Assigning shope_id to the order
                 ]);
+                if ($user->referrer_id) {
+                    $m = new MarketersReports();
+                    $m->money = 0.025 * $subtotal;
+                    $m->percentage = "2.5";
+                    $m->user_id = $user->referrer_id;
+                    $m->order_id = $orderId;
+                    $m->save();
+                }
 
                 // Inserting order items for this merchant
                 foreach ($items as $item) {

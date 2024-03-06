@@ -39,16 +39,23 @@ return new class extends Migration
             $table->unsignedBigInteger('user_address_id');
             $table->unsignedBigInteger('coupon_id')->nullable();
 
+            $table->unsignedBigInteger('mosaoq_id')->nullable();
+            $table->foreign('mosaoq_id')
+                ->references('id')
+                ->on('users')->onDelete('cascade');
 
             $table->foreign('shope_id')
                 ->references('id')
+
                 ->on('users')->onDelete('cascade');
             $table->foreign('coupon_id')
                 ->references('id')
+
                 ->on('coupons')->onDelete('cascade');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')->onDelete('cascade');
+
             $table->foreign('user_address_id')
                 ->references('id')
                 ->on('user_addresses')->onDelete('cascade');

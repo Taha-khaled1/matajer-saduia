@@ -12,7 +12,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
     use HasRoles;
     protected $primaryKey = 'id';
 
@@ -23,6 +23,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function products()
     {
         return $this->hasMany(Product::class, 'user_id');
+    }
+    public function marketers_reports()
+    {
+        return $this->hasMany(MarketersReports::class, 'user_id');
     }
     public function histories()
     {
@@ -82,6 +86,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function orders()
     {
         return $this->hasMany(Order::class, 'user_id');
+    }
+    public function mosaoqOrders()
+    {
+        return $this->hasMany(Order::class, 'mosaoq_id');
     }
     public function ordersShopes()
     {

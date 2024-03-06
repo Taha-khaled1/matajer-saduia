@@ -11,10 +11,17 @@ class Order extends Model
     //    protected $fillable = ['user_id', 'total_amount', 'is_paid'];
     protected $table = 'orders';
     protected $guarded = [];
-
+    public function marketersReport()
+    {
+        return $this->hasOne(MarketersReports::class);
+    }
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    public function mosaoqUser()
+    {
+        return $this->belongsTo(User::class, 'mosaoq_id');
     }
     public function userShopes()
     {
