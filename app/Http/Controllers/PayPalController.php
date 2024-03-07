@@ -14,7 +14,7 @@ class PayPalController extends Controller
     {
         $user = User::find($request->id);
         $payment = new TapPayment();
-        $user = Auth::user();
+        // $user = Auth::user();
         $response = $payment
             ->setUserFirstName($user->name)
             ->setUserLastName('1' . '-' . $user->id . '-' . $request->type)

@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-
             $table->enum('status', ['pending', 'processing', 'delivering', 'completed', 'cancelled', 'refunded', 'shipped'])->default('pending');
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
             $table->enum('payment_method', ['cash_on_delivery', 'stripe', 'paypal', 'tap'])->default('cash_on_delivery'); // stripe or paypal or cash_on_delivery

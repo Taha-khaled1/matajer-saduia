@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('marketers_reports', function (Blueprint $table) {
             $table->id();
             $table->string("money");
-            $table->enum("status", ['procedure', 'sold'])->default("procedure"); //procedure sold 
+            $table->enum("status", ['procedure', 'sold', 'charge', 'return'])->default("procedure"); //procedure sold 
             $table->string("percentage"); // 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

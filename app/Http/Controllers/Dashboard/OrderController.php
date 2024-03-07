@@ -6,7 +6,6 @@ use App\Models\Order;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\SettingWeb;
 use App\Models\Withdrawal;
 use Illuminate\Support\Facades\Auth;
 
