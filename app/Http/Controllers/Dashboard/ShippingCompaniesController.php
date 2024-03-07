@@ -12,7 +12,7 @@ class ShippingCompaniesController extends Controller
 {
     public function index()
     {
-        $shipping_companies = ShippingCompanies::orderByDesc('created_at')->get();
+        $shipping_companies = ShippingCompanies::orderByDesc('created_at')->where("user_id", Auth::user()->id)->get();
         return view('dashboard.shipping_companies.index', compact('shipping_companies'));
     }
 

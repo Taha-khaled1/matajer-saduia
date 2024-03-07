@@ -95,9 +95,9 @@
                     <a class="modal-effect btn btn-outline-primary mr-2" style="width: 300px;" data-effect="effect-scale"
                         data-toggle="modal" href="#modaldemo8">اضافة شركة شحن</a>
 
-                    <a class="modal-effect btn btn-outline-primary mr-2" style="width: 300px;" data-effect="effect-scale"
+                    {{-- <a class="modal-effect btn btn-outline-primary mr-2" style="width: 300px;" data-effect="effect-scale"
                         data-toggle="modal" href="#exampleModal0">اضافة مكان التوصيل
-                        المستخدمين</a>
+                        المستخدمين</a> --}}
                 </div>
 
 

@@ -39,7 +39,7 @@ class PayPalController extends Controller
         $parts = explode("-", $response['process_data']['customer']['last_name']);
 
         // Use print_r to print array contents
-        print_r($parts);
+        // print_r($parts);
         $firstName = $parts[0]; // "hi"
         $middleName = $parts[1]; // "man"
         $lastName = $parts[2];  // cc

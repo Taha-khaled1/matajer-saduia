@@ -14,10 +14,10 @@ class BranchCompanyController extends Controller
 
     function __construct()
     {
-        $this->middleware('permission:جميع الاقسام', ['only' => ['index', 'updateStatusCatogery']]);
-        $this->middleware('permission:اضافة قسم', ['only' => ['store']]);
-        $this->middleware('permission:تعديل قسم', ['only' => ['update']]);
-        $this->middleware('permission:حذف قسم', ['only' => ['destroy']]);
+        // $this->middleware('permission:جميع الاقسام', ['only' => ['index', 'updateStatusCatogery']]);
+        // $this->middleware('permission:اضافة قسم', ['only' => ['store']]);
+        // $this->middleware('permission:تعديل قسم', ['only' => ['update']]);
+        // $this->middleware('permission:حذف قسم', ['only' => ['destroy']]);
     }
     use ImageProcessing;
 

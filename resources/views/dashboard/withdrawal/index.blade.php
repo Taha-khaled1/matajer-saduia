@@ -85,11 +85,11 @@
 
         <div class="col-xl-12">
             <div class="card">
-                <form action="">
+                {{-- <form action="">
                     <div class="col-sm-6 col-md-4 col-xl-3">
                         <a class="modal-effect btn btn-outline-primary btn-block" data-effect="effect-scale">رفع مطالبه</a>
                     </div>
-                </form>
+                </form> --}}
                 {{-- <div class="col-sm-6 col-md-4 col-xl-3">
                     <a class="modal-effect btn btn-outline-primary btn-block" data-effect="effect-scale" data-toggle="modal"
                         href="#modaldemo8">طلب سحب رصيد</a>

@@ -59,6 +59,11 @@ class AdvertisementController extends Controller
 
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        if (Auth::user()->subscription == 'normal') {
+            session()->flash('Add', 'يجب ترقية الاشتراك');
+
+            return redirect()->route('advertisements.index')->with('success', 'Category created successfully');
+        }
         $data['image'] = $this->saveImage($request->file('image'), 'category');
         $category = new Advertisement;
         $category->name = $request->input('name');
