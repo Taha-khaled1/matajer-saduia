@@ -44,8 +44,8 @@ class PayPalController extends Controller
         $middleName = $parts[1]; // "man"
         $lastName = $parts[2];  // cc
         if ($response['success'] == true) {
-            $user = User::find($lastName);
-            $user->subscription = $firstName;
+            $user = User::find($middleName);
+            $user->subscription = $lastName;
             $user->subscription_at = now();
             $user->save();
             return response()->json("Payment completed successfully");
