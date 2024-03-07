@@ -40,7 +40,20 @@ function ReverseLanguage($lang)
     }
     return "ar";
 }
-
+function typeStatusAfallite($status)
+{
+    if ($status == 'procedure') {
+        return 'تحت الاجراء';
+    } else if ($status == 'sold') {
+        return 'تم البيع';
+    } else if ($status == 'charge') {
+        return 'تم التحويل للمحفظه';
+    } else if ($status == 'return') {
+        return 'مرتجع';
+    } else {
+        return 'مشكله';
+    }
+}
 function typeWithdrawer($status)
 {
     if ($status == 'won') {

@@ -201,9 +201,6 @@
 
 
             <div class="card mg-b-20">
-
-
-
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="example" class="table key-buttons text-md-nowrap" data-page-length='50'>
@@ -214,7 +211,7 @@
                                     <th class="border-bottom-0">المبلغ</th>
                                     <th class="border-bottom-0">التاريخ</th>
                                     <th class="border-bottom-0">المحفظه</th>
-                                    <th class="border-bottom-0">المحفظه</th>
+                                    {{-- <th class="border-bottom-0">المحفظه</th> --}}
                                     {{-- <th class="border-bottom-0"> العمليات</th> --}}
 
                                 </tr>
@@ -229,7 +226,7 @@
                                         <td>{{ $historie->money ?? 0 }}</td>
                                         <td>{{ $historie->created_at ?? 0 }}</td>
                                         <td>{{ $historie->user->refund }}</td>
-                                        <td>{{ $historie->user->refund }}</td>
+                                        {{-- <td>{{ $historie->user->refund }}</td> --}}
 
 
                                         {{-- <td>
@@ -246,8 +243,89 @@
                         </table>
                     </div>
                 </div>
-                >
             </div>
+
+            <div class="card mg-b-20">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example32" class="table key-buttons text-md-nowrap" data-page-length='50'>
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0">#</th>
+                                    <th class="border-bottom-0">اسم المسوق بالعموله</th>
+                                    <th class="border-bottom-0">المبلغ</th>
+                                    <th class="border-bottom-0">التاريخ</th>
+                                    <th class="border-bottom-0">المحفظه</th>
+                                    {{-- <th class="border-bottom-0">المحفظه</th> --}}
+                                    <th class="border-bottom-0"> العمليات</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $i = 0; ?>
+                                @foreach ($marketers as $historie)
+                                    <?php $i++; ?>
+                                    <tr>
+                                        <td>{{ $i }}</td>
+                                        <td>{{ $historie->user->name }}</td>
+                                        <td>{{ $historie->money ?? 0 }}</td>
+                                        <td>{{ $historie->created_at ?? 0 }}</td>
+                                        <td>{{ $historie->user->refund }}</td>
+                                        <td>
+
+                                            <div class="dropdown">
+                                                <button aria-expanded="false" aria-haspopup="true"
+                                                    class="btn ripple btn-secondary" data-toggle="dropdown"
+                                                    type="button">{{ typeStatusAfallite($historie->status) }}<i
+                                                        class="fas fa-caret-down ml-1"></i></button>
+                                                <div class="dropdown-menu tx-13">
+
+                                                    <form id="language-form"
+                                                        action="{{ route('user.userAffaliteUpadeType') }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id"
+                                                            value="{{ $historie->id }}">
+
+                                                        <button class="dropdown-item" type="submit" name="status"
+                                                            value="return">مرتجع</button>
+                                                        <button class="dropdown-item" type="submit" name="status"
+                                                            value="sold">تم البيع</button>
+                                                        <button class="dropdown-item" type="submit" name="status"
+                                                            value="charge">تم التحويل للمحفظه</button>
+                                                        <button class="dropdown-item" type="submit" name="status"
+                                                            value="procedure">تحت الاجراء</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </td>
+
+
+                                        {{-- <td>
+                                            <div class="d-flex">
+                                                <button class="btn btn-outline-danger btn-sm mr-2"
+                                                    data-pro_id="{{ $historie->id }}" data-name="{{ $historie->name }}"
+                                                    data-toggle="modal" data-target="#modaldemo9">حذف</button>
+                                            </div>
+                                        </td> --}}
+
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
             <!-- not -->
             <div class="modal fade" id="exampleModal0" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">

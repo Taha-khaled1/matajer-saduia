@@ -33,12 +33,12 @@
         .status {
             /* background-color: aqua; */
             /* color: aqua;
-                                                                                                                                                                                                                                                                                                                                                                                                            -moz-background-origin: border-box */
+                                                                                                                                                                                                                                                                                                                                                                                                                -moz-background-origin: border-box */
         }
 
         /* .btn-secondary {
-                                                                                                                                                                                                                    background-color: #0049ff !important;
-                                                                                                                                                                                                                } */
+                                                                                                                                                                                                                        background-color: #0049ff !important;
+                                                                                                                                                                                                                    } */
     </style>
 @endsection
 
@@ -187,9 +187,7 @@
                                                     type="button">{{ statusPayment($order->payment_status) }}<i
                                                         class="fas fa-caret-down ml-1"></i></button>
                                                 <div class="dropdown-menu tx-13">
-                                                    {{-- <h6
-                                                        class="dropdown-header tx-uppercase tx-11 tx-bold tx-inverse tx-spacing-1">
-                                                        اختار اللغه </h6> --}}
+
                                                     <form id="language-form"
                                                         action="{{ route('orders.changePaymentStatus') }}"
                                                         method="POST">

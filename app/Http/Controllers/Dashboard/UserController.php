@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Models\History;
+use App\Models\MarketersReports;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -33,7 +34,7 @@ class UserController extends Controller
     {
 
         $histories = History::with('user')->get();
-
+        $marketers = MarketersReports::all();
         $userdata = User::whereHas('roles', function ($query) {
             $query->where('name', 'affiliate');
         })->orderBy('id', 'DESC')
@@ -42,7 +43,7 @@ class UserController extends Controller
 
         $roles = Role::all();
 
-        return view('dashboard.user.index', compact('userdata', 'roles', 'histories'))
+        return view('dashboard.user.index', compact('userdata', 'roles', 'histories', 'marketers'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     public function vendeors(Request $request)
@@ -71,6 +72,15 @@ class UserController extends Controller
         return view('dashboard.user.subsecription', compact('userdata', 'roles'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
+    public function userAffaliteUpadeType(Request $request)
+    {
+
+        $marketer = MarketersReports::findOrFail($request->id);
+        $marketer->status = $request->status;
+        $marketer->save();
+        session()->flash('Add', 'تم التغيير بنجاح');
+        return back();
+    }
     public function userUpdate($id)
     {
         $roles = Role::all();
@@ -82,7 +92,7 @@ class UserController extends Controller
     {
         // return $request;
         $user = User::find($request->user_id);
-        $user->refund = $request->money;
+        $user->refund += $request->money;
         $user->save();
         $his = new History();
         $his->money = $request->money;
@@ -173,10 +183,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    // public function show()
+    // {
+    //     $marketers = MarketersReports::all();
+
+    // }
 
 
     public function edit($id)

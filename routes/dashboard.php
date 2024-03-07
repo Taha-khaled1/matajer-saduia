@@ -148,6 +148,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/user/SubscrebtionVendeors', 'SubscrebtionVendeors')->name('user.SubscrebtionVendeors');
         Route::get('/user/affiliate', 'affiliateMarketer')->name('user.affiliate');
         Route::post('/user/chargeWallet', 'chargeWallet')->name('user.chargeWallet');
+        Route::post('/user/userAffaliteUpadeType', 'userAffaliteUpadeType')->name('user.userAffaliteUpadeType');
     });
     Route::controller(CountryController::class)->group(function () {
         // Route::get('/catogery', 'index')->name('catogery');
