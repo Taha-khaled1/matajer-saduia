@@ -44,9 +44,9 @@ class UserAddressController extends Controller
                 'name' => 'required|string',
                 'email' => 'required|email',
                 'phone' => 'required|string',
-                'longitude' => 'required|string',
-                'latitudes' => 'required|string',
-                'location_id' => 'required|string',
+                // 'longitude' => 'required|string',
+                // 'latitudes' => 'required|string',
+                // 'location_id' => 'required|string',
                 'delivery_instruction' => 'nullable|string',
                 // 'default' => 'required|in:0,1',
             ]);
