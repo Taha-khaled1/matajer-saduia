@@ -35,7 +35,7 @@ class UserAddressController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'country' => 'required|string|exists:countries,name',
+                'country' => 'nullable|string',
                 'state' => 'nullable|string',
                 'city' => 'nullable|string',
                 'zip' => 'nullable|string',
