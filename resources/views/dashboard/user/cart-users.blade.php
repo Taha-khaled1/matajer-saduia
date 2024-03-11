@@ -26,6 +26,22 @@
     <link rel="stylesheet" href="{{ URL::asset('assets/plugins/sumoselect/sumoselect-rtl.css') }}">
     <!--Internal  TelephoneInput css-->
     <link rel="stylesheet" href="{{ URL::asset('assets/plugins/telephoneinput/telephoneinput-rtl.css') }}">
+    <style>
+        /* CSS */
+        #whatsapp-btn {
+            display: inline-block;
+            width: 50px;
+            /* Adjust width as needed */
+            height: 50px;
+            /* Adjust height as needed */
+        }
+
+        #whatsapp-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
 @endsection
 @section('title')
     صفحة المستخدمين
@@ -96,21 +112,9 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card mg-b-20">
-                <div class="card-header pb-0">
-                    <div class="button-container">
-
-                        <a class="modal-effect btn btn-outline-primary mr-2" style="width: 300px;"
-                            data-effect="effect-scale" data-toggle="modal" href="#exampleModal">اضافة مستخدم</a>
 
 
-                        <a class="modal-effect btn btn-outline-primary mr-2" style="width: 300px;"
-                            data-effect="effect-scale" data-toggle="modal" href="#exampleModal0">ارسال اشعار لجميع
-                            المستخدمين</a>
-                    </div>
-                </div>
-
-
-
+                {{-- {{ $usersWithCartItems['user'] }} --}}
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="example1" class="table key-buttons text-md-nowrap" data-page-length='50'>
@@ -120,81 +124,64 @@
                                     <th class="border-bottom-0">اسم المستخدم</th>
                                     <th class="border-bottom-0">رقم الهاتف</th>
                                     <th class="border-bottom-0">البريد الاكتروني</th>
-                                    <th class="border-bottom-0">المحفظه</th>
+                                    {{-- <th class="border-bottom-0">المحفظه</th>
                                     <th class="border-bottom-0">صلاحيات المستخدم</th>
-                                    {{-- @if ($user->hasRole('vendor'))
-                                        <th class="border-bottom-0">نوع الاشتراك</th>
-                                    @endif --}}
-                                    <th class="border-bottom-0">حالة المستخدم</th>
+                                    <th class="border-bottom-0">حالة المستخدم</th> --}}
                                     {{-- <th class="border-bottom-0">الدفع عند الاسلام</th> --}}
+                                    {{-- <th class="border-bottom-0"> عدد المنتجات في عربة التسوق</th> --}}
                                     <th class="border-bottom-0"> العمليات</th>
 
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php $i = 0; ?>
-                                @foreach ($userdata as $user)
-                                    @php
-                                        $user = \App\Models\User::find($user->id);
-                                    @endphp
+                                @foreach ($usersWithCartItems as $user)
+                                    {{-- {{ $user->cart_items }} {{ $user['cart_items'] }} --}}
                                     <?php $i++; ?>
                                     <tr>
                                         <td>{{ $i }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->phone ?? 0 }}</td>
                                         <td>{{ $user->email }}</td>
-                                        <td>{{ $user->refund }}</td>
+                                        {{-- <td>{{ count($user->cart_items ?? []) }}</td> --}}
+                                        {{-- <td>{{ $user->refund }}</td>
                                         <td>{{ roleToArabic($user->roles[0]['name']) }}</td>
-                                        {{-- @if ($user->hasRole('vendor'))
-                                            <td>
-                                                <div class="dropdown">
-                                                    <button aria-expanded="false" aria-haspopup="true"
-                                                        class="btn ripple btn-secondary" data-toggle="dropdown"
-                                                        type="button">
-                                                        {{ subScribeStatus($user->subscription) }}
-                                                        <i class="fas fa-caret-down ml-1"></i></button>
-                                                    <div class="dropdown-menu tx-13">
-
-                                                        <form id="language-form" action="{{ route('user.chargeSubsc') }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="id" id="id"
-                                                                value="{{ $user->id }}">
-                                                            <button class="dropdown-item" type="submit"
-                                                                name="subscription" value="silver">فضي
-                                                            </button>
-                                                            <button class="dropdown-item" type="submit"
-                                                                name="subscription" value="normal">العادي
-                                                            </button>
-                                                            <button class="dropdown-item" type="submit"
-                                                                name="subscription" value="golden">الذهبي
-                                                            </button>
-
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        @endif --}}
-
-
                                         <td>
                                             <div class="main-toggle main-toggle-success {{ $user->status == 1 ? 'on' : '' }} btn-sm ml-2"
                                                 data-user-id="{{ $user->id }}" id="main-toggle">
                                                 <span></span>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                         {{-- <td>
                                             <div class="main-toggle main-toggle-success {{ $user->cash_on_delivery == 1 ? 'on' : '' }} btn-sm ml-2"
                                                 data-user-id="{{ $user->id }}" id="cash_on_delivery">
                                                 <span></span>
                                             </div>
                                         </td> --}}
+                                        @php
+                                            $text =
+                                                'مرحبا ' .
+                                                $user->name .
+                                                ', نور متجرنا بوجودك  شفنا انك نسيت سلتك في متجرنا, ونبيك تكمل الطلب. واتمام عملية الشراء بسهولة عبر الرابط التالي كود الخصم * خدمة العملاء https://rawatec1.com/checkout/nkJr0EZ3zgOVNaMDb68qkowmQDj634WLpjR9Ly15XWA4YlxKeB2Gn7';
+                                        @endphp
+
                                         <td>
                                             <div class="d-flex">
 
+                                                <!-- WhatsApp button -->
+                                                <a id="whatsapp-btn"
+                                                    href="https://wa.me/{{ $user->phone }}?text={{ $text }}"
+                                                    target="_blank">
+                                                    <img src="https://tse2.mm.bing.net/th?id=OIP.vEXxdY3SvhBBTSrUYFmYugHaGd&pid=Api&P=0&h=220"
+                                                        alt="WhatsApp Icon">
+                                                </a>
 
 
-                                                @if ($user->hasRole('vendor'))
+
+                                                {{-- @php
+                                                    $user = \App\Models\User::find($user->id);
+                                                @endphp --}}
+                                                {{-- @if ($user->hasRole('vendor'))
                                                     <form action="{{ route('setting') }}">
                                                         <input type="text" name="user_id" value="{{ $user->id }}"
                                                             hidden>
@@ -202,32 +189,6 @@
 
                                                         </button>
                                                     </form>
-                                                    <div class="dropdown">
-                                                        <button aria-expanded="false" aria-haspopup="true"
-                                                            class="btn ripple btn-secondary" data-toggle="dropdown"
-                                                            type="button">
-                                                            {{ subScribeStatus($user->subscription) }}
-                                                            <i class="fas fa-caret-down ml-1"></i></button>
-                                                        <div class="dropdown-menu tx-13">
-
-                                                            <form id="language-form"
-                                                                action="{{ route('user.chargeSubsc') }}" method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="id" id="id"
-                                                                    value="{{ $user->id }}">
-                                                                <button class="dropdown-item" type="submit"
-                                                                    name="subscription" value="silver">فضي
-                                                                </button>
-                                                                <button class="dropdown-item" type="submit"
-                                                                    name="subscription" value="normal">العادي
-                                                                </button>
-                                                                <button class="dropdown-item" type="submit"
-                                                                    name="subscription" value="golden">الذهبي
-                                                                </button>
-
-                                                            </form>
-                                                        </div>
-                                                    </div>
                                                 @endif
 
                                                 <button class="btn btn-outline-danger btn-sm mr-2"
@@ -248,7 +209,7 @@
 
                                                 <button class="btn btn-outline-danger btn-sm mr-2"
                                                     data-pro_id="{{ $user->id }}" data-name="{{ $user->name }}"
-                                                    data-toggle="modal" data-target="#modaldemo9">حذف</button>
+                                                    data-toggle="modal" data-target="#modaldemo9">حذف</button> --}}
                                             </div>
                                         </td>
 
@@ -262,275 +223,14 @@
             </div>
 
 
-            <div class="card mg-b-20">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="example" class="table key-buttons text-md-nowrap" data-page-length='50'>
-                            <thead>
-                                <tr>
-                                    <th class="border-bottom-0">#</th>
-                                    <th class="border-bottom-0">اسم المستخدم</th>
-                                    <th class="border-bottom-0">المبلغ</th>
-                                    <th class="border-bottom-0">التاريخ</th>
-                                    <th class="border-bottom-0">المحفظه</th>
-                                    {{-- <th class="border-bottom-0">المحفظه</th> --}}
-                                    {{-- <th class="border-bottom-0"> العمليات</th> --}}
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php $i = 0; ?>
-                                @foreach ($histories as $historie)
-                                    <?php $i++; ?>
-                                    <tr>
-                                        <td>{{ $i }}</td>
-                                        <td>{{ $historie->user->name }}</td>
-                                        <td>{{ $historie->money ?? 0 }}</td>
-                                        <td>{{ $historie->created_at ?? 0 }}</td>
-                                        <td>{{ $historie->user->refund }}</td>
-                                        {{-- <td>{{ $historie->user->refund }}</td> --}}
-
-
-                                        {{-- <td>
-                                            <div class="d-flex">
-                                                <button class="btn btn-outline-danger btn-sm mr-2"
-                                                    data-pro_id="{{ $historie->id }}" data-name="{{ $historie->name }}"
-                                                    data-toggle="modal" data-target="#modaldemo9">حذف</button>
-                                            </div>
-                                        </td> --}}
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            @php
-                $url = url()->current();
-                $parts = explode('/', $url);
-                $lastWord = end($parts);
-            @endphp
-            @if ($lastWord == 'affiliate')
-                <div class="card mg-b-20">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="example32" class="table key-buttons text-md-nowrap" data-page-length='50'>
-                                <thead>
-                                    <tr>
-                                        <th class="border-bottom-0">#</th>
-                                        <th class="border-bottom-0">اسم المسوق بالعموله</th>
-                                        <th class="border-bottom-0">المبلغ</th>
-                                        <th class="border-bottom-0">التاريخ</th>
-                                        <th class="border-bottom-0">المحفظه</th>
-                                        <th class="border-bottom-0">رقم الطلب</th>
-                                        <th class="border-bottom-0"> العمليات</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $i = 0; ?>
-                                    @foreach ($marketers as $historie)
-                                        <?php $i++; ?>
-                                        <tr>
-                                            <td>{{ $i }}</td>
-                                            <td>{{ $historie->user->name }}</td>
-                                            <td>{{ $historie->money ?? 0 }}</td>
-                                            <td>{{ $historie->created_at ?? 0 }}</td>
-                                            <td>{{ $historie->user->refund }}</td>
-                                            <td>{{ $historie->order_id }}</td>
-                                            <td>
-
-                                                <div class="dropdown">
-                                                    <button aria-expanded="false" aria-haspopup="true"
-                                                        class="btn ripple btn-secondary" data-toggle="dropdown"
-                                                        type="button">{{ typeStatusAfallite($historie->status) }}<i
-                                                            class="fas fa-caret-down ml-1"></i></button>
-                                                    <div class="dropdown-menu tx-13">
-
-                                                        <form id="language-form"
-                                                            action="{{ route('user.userAffaliteUpadeType') }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="id"
-                                                                value="{{ $historie->id }}">
-
-                                                            <button class="dropdown-item" type="submit" name="status"
-                                                                value="return">مرتجع</button>
-                                                            <button class="dropdown-item" type="submit" name="status"
-                                                                value="sold">تم البيع</button>
-                                                            <button class="dropdown-item" type="submit" name="status"
-                                                                value="charge">تم التحويل للمحفظه</button>
-                                                            <button class="dropdown-item" type="submit" name="status"
-                                                                value="procedure">تحت الاجراء</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-
-
-
-
-                                            </td>
-
-
-                                            {{-- <td>
-                                            <div class="d-flex">
-                                                <button class="btn btn-outline-danger btn-sm mr-2"
-                                                    data-pro_id="{{ $historie->id }}" data-name="{{ $historie->name }}"
-                                                    data-toggle="modal" data-target="#modaldemo9">حذف</button>
-                                            </div>
-                                        </td> --}}
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-            @endif
 
 
 
 
 
 
-            <!-- not -->
-            <div class="modal fade" id="exampleModal0" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">ارسال اشعار للمستخدمين</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form action="{{ route('send.notificationToAll') }}" method="post">
-                            {{ csrf_field() }}
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">العنوان</label>
-                                    <input type="text" class="form-control" id="title" name="title" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">الرساله</label>
-                                    <input type="text" class="form-control" id="message" name="message" required>
-                                </div>
-                                <input type="text" class="form-control" id="type" name="type" value="all"
-                                    hidden>
-
-                            </div>
 
 
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">تاكيد</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                            </div>
-
-                        </form>
-
-
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- not user -->
-            <div class="modal fade" id="exampleModal00" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">ارسال اشعار للمستخدمين</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form action="{{ route('send.notification') }}" method="post">
-                            {{ csrf_field() }}
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">اسم الالمستخدم</label>
-                                    <input type="text" class="form-control" id="name" name="name" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">العنوان</label>
-                                    <input type="text" class="form-control" id="title" name="title" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">الرساله</label>
-                                    <input type="text" class="form-control" id="message" name="message" required>
-                                </div>
-
-                                <input type="text" class="form-control" id="user_id" name="user_id" value=""
-                                    hidden>
-                                <input type="text" class="form-control" id="type" name="type" value="one"
-                                    hidden>
-
-
-                            </div>
-
-
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">تاكيد</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                            </div>
-
-                        </form>
-
-
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="exampleModal000" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            {{-- <h5 class="modal-title" id="exampleModalLabel">ارسال اشعار للمستخدمين</h5> --}}
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form action="{{ route('user.chargeWallet') }}" method="post">
-                            {{ csrf_field() }}
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">اسم الالمستخدم</label>
-                                    <input type="text" class="form-control" id="name" name="name" readonly>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">قيمة المبلغ</label>
-                                    <input type="text" class="form-control" id="money" name="money" required>
-                                </div>
-
-                                <input type="text" class="form-control" id="user_id" name="user_id" value=""
-                                    hidden>
-                                <input type="text" class="form-control" id="type" name="type" value="one"
-                                    hidden>
-
-
-                            </div>
-
-
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">تاكيد</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                            </div>
-
-                        </form>
-
-
-                    </div>
-                </div>
-            </div>
             <!-- add -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
@@ -555,16 +255,7 @@
                                     <label for="title">رقم الهاتف </label>
                                     <input type="number" class="form-control" name="phone" id="mmmmm">
                                 </div>
-                                <div class="mb-4">
-                                    <p class="mg-b-10">صلاحيات المستخدمين</p>
-                                    <select name="roles[]" multiple="multiple" class="testselect2" required>
-                                        @foreach ($roles as $role)
-                                            <option title="{{ $role->name }}" value="{{ $role->id }}">
-                                                {{ $role->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+
 
                                 <div class="form-group">
                                     <label for="title">البريد الاكتروني </label>
@@ -616,16 +307,7 @@
                                     <input type="text" class="form-control" name="phone" id="phone"
                                         value="">
                                 </div>
-                                <div class="mb-4">
-                                    <p class="mg-b-10">صلاحيات المستخدمين</p>
-                                    <select name="roles[]" multiple="multiple" class="testselect2">
-                                        @foreach ($roles as $role)
-                                            <option title="{{ $role->name }}" value="{{ $role->id }}">
-                                                {{ $role->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+
                                 <div class="form-group">
                                     <label for="title">البريد الإلكتروني</label>
                                     <input type="text" class="form-control" name="email" id="email">
@@ -818,6 +500,12 @@
     <script src="{{ URL::asset('assets/js/modal.js') }}"></script>
 
     <script>
+        // document.getElementById('whatsapp-btn').addEventListener('click', function() {
+        //     var phoneNumber = '+1113051656'; // Replace with your WhatsApp number
+        //     var message = encodeURIComponent('Hello!'); // Optional message
+        //     var url = 'https://wa.me/' + phoneNumber + '?text=' + message;
+        //     window.open(url, '_blank');
+        // });
         $('#edit_user').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget)
             var name = button.data('name')

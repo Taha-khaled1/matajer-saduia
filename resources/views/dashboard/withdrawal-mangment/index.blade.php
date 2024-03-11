@@ -131,19 +131,7 @@
                                                     data-toggle="dropdown"
                                                     type="button">{{ typeWithdrawer($withdrawal->type) }}<i
                                                         class="fas fa-caret-down ml-1"></i></button>
-                                                {{-- <div class="dropdown-menu tx-13">
-                                                    <form id="language-form" action="{{ route('withdrawals.changeType') }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="id" value="{{ $withdrawal->id }}">
 
-                                                        <button class="dropdown-item" type="submit" name="type"
-                                                            value="suspended">مفتوح</button>
-                                                        <button class="dropdown-item" type="submit" name="type"
-                                                            value="drawn">مغلق
-                                                        </button>
-                                                    </form>
-                                                </div> --}}
                                             </div>
 
 

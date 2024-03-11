@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Withdrawal;
 use Illuminate\Support\Facades\Auth;
 
@@ -116,9 +117,10 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function edit(Order $order)
+    public function edit(Request $request)
     {
-        //
+        $usersWithCartItems =  User::has('cartItems')->with('cartItems.product', 'cartItems.attribute')->get();
+        return view("dashboard.user.cart-users", compact("usersWithCartItems"));
     }
 
     /**

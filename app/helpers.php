@@ -64,6 +64,16 @@ function typeWithdrawer($status)
         return 'مفتوح';
     }
 }
+function subScribeStatus($status)
+{
+    if ($status == 'silver') {
+        return 'فضي';
+    } else if ($status == 'golden') {
+        return 'الذهبي';
+    } else {
+        return 'العادي';
+    }
+}
 function statusToArabic($status)
 {
 

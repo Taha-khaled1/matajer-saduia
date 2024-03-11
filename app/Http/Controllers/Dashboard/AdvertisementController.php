@@ -43,13 +43,13 @@ class AdvertisementController extends Controller
         // return $request;
         $validator = Validator::make($request->all(), [
             'name' => 'required|unique:advertisements|max:100',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'boolean',
         ], [
             'name.required' => 'يرجى إدخال اسم الفئة باللغة الإنجليزية',
             'name.unique' => 'اسم الفئة باللغة الإنجليزية مُسجل مسبقًا',
             'name.max' => 'يجب ألا يتجاوز اسم الفئة باللغة الإنجليزية 100 حرف',
-            'image.image' => 'يرجى اختيار صورة صالحة',
+
             'image.mimes' => 'صيغ الصور المدعومة هي: jpeg, png, jpg, gif, svg',
             'status.boolean' => 'قيمة حالة الفئة يجب أن تكون صحيحة أو خاطئة',
         ]);
@@ -64,10 +64,16 @@ class AdvertisementController extends Controller
 
             return redirect()->route('advertisements.index')->with('success', 'Category created successfully');
         }
-        $data['image'] = $this->saveImage($request->file('image'), 'category');
+
         $category = new Advertisement;
         $category->name = $request->input('name');
-        $category->image =  'imagesfp/category/' . $data['image'];
+        if ($request->hasFile("image")) {
+            $data['image'] = $this->saveImage($request->file('image'), 'category');
+            $category->image =  'imagesfp/category/' . $data['image'];
+        } else {
+            $category->des = $request->input('description');
+        }
+
         $category->type = $request->input('type');
         $category->link = $request->input('link');
         $category->product_id = $request->input('product_id', 1);

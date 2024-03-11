@@ -33,8 +33,9 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الاقسام /</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">جميع
-                    فروع الشركه</span>
+                <h4 class="content-title mb-0 my-auto">الاقسام /</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">نقاط
+                    الاستلام من المتجر
+                </span>
             </div>
         </div>
 
@@ -87,7 +88,7 @@
             <div class="card">
                 <div class="col-sm-6 col-md-4 col-xl-3">
                     <a class="modal-effect btn btn-outline-primary btn-block" data-effect="effect-scale" data-toggle="modal"
-                        href="#modaldemo8">اضافة فرع الشركه</a>
+                        href="#modaldemo8">اضافه نقطة الاستلام</a>
 
                 </div>
                 <div class="card-body">
@@ -95,8 +96,8 @@
                         <table class="table text-md-nowrap" id="example1">
                             <thead>
                                 <tr>
-                                    <th class="wd-15p border-bottom-0">رقم فرع الشركه</th>
-                                    <th class="wd-15p border-bottom-0">اسم فرع الشركه</th>
+                                    <th class="wd-15p border-bottom-0">رقم نقطة الاستلام</th>
+                                    <th class="wd-15p border-bottom-0">اسم نقطة الاستلام</th>
                                     <th class="wd-15p border-bottom-0">الدوله</th>
                                     <th class="wd-15p border-bottom-0">المدينه</th>
                                     <th class="wd-20p border-bottom-0">العنوان</th>
@@ -150,7 +151,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
-                        <h6 class="modal-title">اضافة فرع الشركه</h6><button aria-label="Close" class="close"
+                        <h6 class="modal-title">اضافة نقطة الاستلام</h6><button aria-label="Close" class="close"
                             data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
@@ -158,7 +159,7 @@
                             {{ csrf_field() }}
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1">اسم فرع الشركه باللغه العربيه</label>
+                                <label for="exampleInputEmail1">اسم نقطة الاستلام باللغه العربيه</label>
                                 <input type="text" class="form-control" id="name_ar" name="name_ar" required>
                             </div>
                             <div class="form-group">
@@ -192,7 +193,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">تعديل فرع الشركه</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">تعديل نقطة الاستلام</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -207,15 +208,15 @@
                             {{-- <input type="hidden" name="status" id="status" value=""> --}}
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1">اسم فرع الشركه باللغه العربيه</label>
+                                <label for="exampleInputEmail1">اسم نقطة الاستلام باللغه العربيه</label>
                                 <input type="text" class="form-control" id="name_ar" name="name_ar" required>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">اسم فرع الشركه باللغه الانجليزيه</label>
+                                <label for="exampleInputEmail1">اسم نقطة الاستلام باللغه الانجليزيه</label>
                                 <input type="text" class="form-control" id="name_en" name="name_en" required>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">ترتيب فرع الشركه </label>
+                                <label for="exampleInputEmail1">ترتيب نقطة الاستلام </label>
                                 <input type="number" class="form-control" id="arrange" name="arrange" required>
                             </div>
                             {{-- <div class="form-group">
@@ -228,7 +229,7 @@
                                 </select>
                             </div> --}}
                             <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">صوره فرع الشركه</label>
+                                <label for="recipient-name" class="col-form-label">صوره نقطة الاستلام</label>
                                 <input class="form-control" name="image" id="image" type="file"
                                     onchange="displaySelectedImage(event)">
                                 <img src="image" id="preview-image" class="img-thumbnail"
@@ -250,7 +251,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content modal-content-demo">
                     <div class="modal-header">
-                        <h6 class="modal-title">حذف فرع الشركه</h6>
+                        <h6 class="modal-title">حذف نقطة الاستلام</h6>
                         <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                             <span aria-hidden="true">&times;</span>
                         </button>

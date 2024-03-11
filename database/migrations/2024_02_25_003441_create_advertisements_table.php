@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('advertisements', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('des')->nullable();
             $table->string('image')->nullable();
             $table->string('link')->nullable();
             $table->enum('type', ['ads', 'notf'])->default("ads");

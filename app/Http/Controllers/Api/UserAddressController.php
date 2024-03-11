@@ -54,14 +54,6 @@ class UserAddressController extends Controller
             if ($validator->fails()) {
                 return response()->json(['message' => $validator->errors()->first(), 'errors' => $validator->errors(), 'status_code' => 400], 400);
             }
-            // $country = Country::where('name',$request->country)->first();
-            // $countryMap = extractCountryName($request->address_1);
-
-            // if ($countryMap != $country->name_en)
-            // {
-            //     return response()->json(['message' => __('custom.ensure_location_selected'), 'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR], Response::HTTP_INTERNAL_SERVER_ERROR);
-            // }
-            // // __('custom.validation_error')
             $userAddress = UserAddress::create(array_merge($validator->validated(), ['user_id' => $request->user->id]));
             return response()->json([
                 // 'userAddress' => $userAddress,

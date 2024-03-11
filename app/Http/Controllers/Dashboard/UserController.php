@@ -53,10 +53,10 @@ class UserController extends Controller
         })->orderBy('id', 'DESC')
             ->with('roles')
             ->get();
-
+        $histories = History::with('user')->get();
         $roles = Role::all();
 
-        return view('dashboard.user.index', compact('userdata', 'roles'))
+        return view('dashboard.user.index', compact('userdata', 'roles', 'histories'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     public function SubscrebtionVendeors(Request $request)
@@ -99,6 +99,16 @@ class UserController extends Controller
         $his->user_id = $request->user_id;
         $his->save();
         session()->flash('Add', 'تم شحن محفظة المستخدم بنجاح');
+        return back();
+    }
+    public function chargeSubsc(Request $request)
+    {
+        // return $request;
+        $user = User::find($request->id);
+        $user->subscription = $request->subscription;
+        $user->save();
+
+        session()->flash('Add', 'تم تحديث اشتراك المستخدم بنجاح');
         return back();
     }
     /**

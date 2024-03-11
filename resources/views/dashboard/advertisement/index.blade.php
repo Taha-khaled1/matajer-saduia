@@ -106,8 +106,8 @@
                                     <th class="wd-15p border-bottom-0">رقم الاعلان</th>
                                     <th class="wd-15p border-bottom-0">عنوان الاعلان</th>
                                     <th class="wd-15p border-bottom-0">صورة الاعلان</th>
-                                    {{-- <th class="wd-15p border-bottom-0">حالة القبول</th>  --}}
-                                    <th class="wd-15p border-bottom-0">حالة مشاهدة الاعلان</th>
+                                    <th class="wd-15p border-bottom-0">النوع</th>
+                                    <th class="wd-15p border-bottom-0">حالة الموافقه</th>
                                     <th class="wd-20p border-bottom-0">تاريخ الانشاء</th>
                                     <th class="wd-20p border-bottom-0">العمليات</th>
                                 </tr>
@@ -133,10 +133,18 @@
                                             </div>
                                         </td>
                                         <td>
-                                            @if ($catogery->show == true)
-                                                تم العرض
+                                            @if ($catogery->type == 'ads')
+                                                اعلان
                                             @else
-                                                لم يتم العرض
+                                                اشعار
+                                            @endif
+
+                                        </td>
+                                        <td>
+                                            @if ($catogery->status == true)
+                                                تم الموافقه
+                                            @else
+                                                لم يتم الموافقه
                                             @endif
 
                                         </td>
@@ -235,35 +243,34 @@
                                 <input type="text" class="form-control" id="name" name="name" required>
                             </div>
 
-                            {{-- <div class="form-group">
-                                <label for="exampleInputEmail1">الرابط </label>
-                                <input type="text" class="form-control" id="link" name="link">
-                            </div> --}}
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">الرابط / الوصف</label>
-                                <input type="text" class="form-control" id="link" name="link">
-                            </div>
+
                             <div class="col-lg">
                                 <p class="mg-b-10">النوع</p>
-                                <select id="type" name="type" class="form-control SlectBox" required>
-                                    <option value="ads" selected>اعلان</option>
+                                <select id="type-ads" name="type" class="form-control SlectBox" required>
+                                    <option value="" selected>اختار نوع الاعلان</option>
+                                    <option value="ads">اعلان</option>
                                     <option value="notf">اشعار</option>
                                 </select>
                             </div>
-
+                            <br>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">الرابط</label>
+                                <input type="text" class="form-control" id="link" name="link">
+                            </div>
 
                             <div class="form-group">
                                 <label for="image">تحميل صوره للاعلان </label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="image" name="image"
-                                        required>
+                                    <input type="file" class="custom-file-input" id="image" name="image">
                                     <label class="custom-file-label" for="image">اختار صوره</label>
                                 </div>
                                 <img src="#" id="preview"
                                     style="display: none; max-width: 200px; max-height: 200px;">
                             </div>
-
-
+                            <div class="form-group">
+                                <label for="description">الوصف</label>
+                                <input type="text" class="form-control" id="description" name="description">
+                            </div>
 
 
                             <div class="modal-footer">
@@ -359,6 +366,22 @@
 @endsection
 
 @section('js')
+    <script>
+        $(document).ready(function() {
+            $('#type-ads').change(function() {
+                var selectedType = $(this).val();
+                if (selectedType === 'ads') {
+                    $('#image').closest('.form-group').show();
+                    $('#link').closest('.form-group').show();
+                    $('#description').closest('.form-group').hide();
+                } else if (selectedType === 'notf') {
+                    $('#image').closest('.form-group').hide();
+                    $('#link').closest('.form-group').hide();
+                    $('#description').closest('.form-group').show();
+                }
+            });
+        });
+    </script>
     <!-- Internal Data tables -->
     <script src="{{ URL::asset('assets/js/modal.js') }}"></script>
     <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>

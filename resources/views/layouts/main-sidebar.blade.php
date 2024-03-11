@@ -232,7 +232,7 @@
                         <li><a class="slide-item" href="{{ route('shipping_companies') }}">شركات الشحن</a></li>
 
 
-                        <li><a class="slide-item" href="{{ route('branch_companies.index') }}"> فروع الشركه
+                        <li><a class="slide-item" href="{{ route('branch_companies.index') }}"> نقاط الاستلام من المتجر
                             </a></li>
 
 
@@ -394,6 +394,10 @@
                                 <li><a class="slide-item" href="{{ route('user') }}"> العملاء
                                     </a></li>
                             @endcan
+                            {{-- @can('رؤية المستخدمين') --}}
+                            <li><a class="slide-item" href="{{ route('cart.users') }}"> عربة التسوق الفارغه
+                                </a></li>
+                            {{-- @endcan --}}
                             @can('رؤية المستخدمين')
                                 <li><a class="slide-item" href="{{ route('user.affiliate') }}">المسوقيين بالعمواله
                                     </a></li>

@@ -114,7 +114,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/orders/invoice/{id}', 'printInvoice')->name('orders.invoice');
         Route::delete('/orders/destroy', 'destroy')->name('orders.destroy');
         Route::get('/orders/uploadMotalpa', 'uploadMotalpa')->name('orders.uploadMotalpa');
-
+        Route::get('/cart/users', 'edit')->name('cart.users');
         Route::post('/orders/changePaymentStatus', 'changePaymentStatus')->name('orders.changePaymentStatus');
         Route::post('/orders/changeOrderStatus', 'changeOrderStatus')->name('orders.changeOrderStatus');
         Route::post('/orders/changeDeliveryTime', 'changeDeliveryTime')->name('orders.changeDeliveryTime');
@@ -148,6 +148,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/user/SubscrebtionVendeors', 'SubscrebtionVendeors')->name('user.SubscrebtionVendeors');
         Route::get('/user/affiliate', 'affiliateMarketer')->name('user.affiliate');
         Route::post('/user/chargeWallet', 'chargeWallet')->name('user.chargeWallet');
+        Route::post('/user/chargeSubsc', 'chargeSubsc')->name('user.chargeSubsc');
         Route::post('/user/userAffaliteUpadeType', 'userAffaliteUpadeType')->name('user.userAffaliteUpadeType');
     });
     Route::controller(CountryController::class)->group(function () {
