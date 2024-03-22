@@ -1,41 +1,42 @@
 <?php
 
 namespace App\Http\Controllers\Dashboard;
+
 use App\Models\Coupon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Auth;
 
 class CouponController extends Controller
 {
-     function __construct()
+    function __construct()
     {
-         $this->middleware('permission:جميع القسائم', ['only' => ['index']]);
-         $this->middleware('permission:اضافة قسيمه', ['only' => ['store']]);
-         $this->middleware('permission:تعديل قسيمه', ['only' => ['update']]);
-         $this->middleware('permission:حذف قسيمه', ['only' => ['destroy']]);
+        $this->middleware('permission:جميع القسائم', ['only' => ['index']]);
+        $this->middleware('permission:اضافة قسيمه', ['only' => ['store']]);
+        $this->middleware('permission:تعديل قسيمه', ['only' => ['update']]);
+        $this->middleware('permission:حذف قسيمه', ['only' => ['destroy']]);
     }
     public function index()
     {
-        $coupons = Coupon::all();
+        $coupons = Coupon::where("user_id", Auth::user()->id)->get();
         return view('dashboard.coupon.index', compact('coupons'));
     }
 
- 
 
 
-    
+
+
     public function create()
     {
-     
+
         return view('dashboard.coupon.store');
     }
 
-  
+
     public function store(Request $request)
     {
         // return $request;
-        
+
         $validatedData = $request->validate([
             'code' => 'required|unique:coupons',
             'discount_amount' => 'required|numeric',
@@ -47,7 +48,7 @@ class CouponController extends Controller
             'end_date' => 'required|date|after:start_date',
             'user_id' => 'exists:users,id',
         ], [
-            'code.required' => 'حقل الكود مطلوب', 
+            'code.required' => 'حقل الكود مطلوب',
             'type.required' => 'حقل نوع القسيمه مطلوب',
             'code.unique' => 'قيمة الكود موجودة مسبقاً',
             'discount_amount.required' => 'حقل مبلغ الخصم مطلوب',
@@ -60,7 +61,7 @@ class CouponController extends Controller
             'user_id.exists' => 'رقم المستخدم غير موجود'
         ]);
 
-        $coupon =new Coupon();
+        $coupon = new Coupon();
         $coupon->code = $validatedData['code'];
         $coupon->discount_amount = $validatedData['discount_amount'];
         $coupon->type = $validatedData['type'];
@@ -69,9 +70,8 @@ class CouponController extends Controller
         $coupon->save();
         // Coupon::create($validatedData);
 
-       session()->flash('Add', 'تم اضافة القسيمه بنجاح ');
-       return redirect()->route('coupons')->with('success', 'Coupon created successfully.');
-
+        session()->flash('Add', 'تم اضافة القسيمه بنجاح ');
+        return redirect()->route('coupons')->with('success', 'Coupon created successfully.');
     }
 
     /**
@@ -105,17 +105,17 @@ class CouponController extends Controller
      */
     public function update(Request $request)
     {
-       $validatedData = $request->validate([
-        'code' => 'required|unique:coupons,code,' . $request->id,
-        'discount_amount' => 'required|numeric',
-        'start_date' => 'required|date',
-        'end_date' => 'required|date|after:start_date',
-       
-    ]);
+        $validatedData = $request->validate([
+            'code' => 'required|unique:coupons,code,' . $request->id,
+            'discount_amount' => 'required|numeric',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+
+        ]);
 
         $coupon = Coupon::find($request->id); // حدد القسيمة التي تريد تحديثها
         $coupon->update($validatedData);
-         session()->flash('Add', 'تم تعديل القسيمه بنجاح ');
+        session()->flash('Add', 'تم تعديل القسيمه بنجاح ');
         return redirect()->route('coupons')->with('success', 'Coupon updated successfully.');
     }
 

@@ -6,7 +6,9 @@ use App\Models\Order;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BranchCompany;
 use App\Models\User;
+use App\Models\UserAddress;
 use App\Models\Withdrawal;
 use Illuminate\Support\Facades\Auth;
 
@@ -119,7 +121,7 @@ class OrderController extends Controller
      */
     public function edit(Request $request)
     {
-        $usersWithCartItems =  User::has('cartItems')->with('cartItems.product', 'cartItems.attribute')->get();
+        $usersWithCartItems = User::has('cartItems')->with('cartItems.product', 'cartItems.attribute')->get();
         return view("dashboard.user.cart-users", compact("usersWithCartItems"));
     }
 
@@ -156,7 +158,7 @@ class OrderController extends Controller
         }
         $withdrawal = new Withdrawal;
         $withdrawal->total = $totalTotal;
-        $withdrawal->type =  "suspended";
+        $withdrawal->type = "suspended";
         $withdrawal->user_id = Auth::user()->id;
         $withdrawal->save();
         // $withdrawal->id = md5(uniqid('', true));
@@ -177,5 +179,101 @@ class OrderController extends Controller
         $order->delete();
         session()->flash('delete', 'تم حذف الطلبيه بنجاح ');
         return redirect()->route('orders')->with('success', 'orders deleted successfully');
+    }
+
+
+
+
+
+
+
+
+
+
+
+    public function createShipment(Request $request, $id)
+    {
+        $order = Order::with('orderItems.product')->find($id);
+        // return $order->orderItems;
+        // return $order['order_items'];
+        $pickupAddress = BranchCompany::find(1);
+        // return $pickupAddress;
+        $dropOffAddress = UserAddress::find($order->user_id);
+        $user = User::find($order->user_id);
+        $url = 'https://server2-api.vision-log.com/matajer?token=' . env("FIGEN");
+        $pickupUser = Auth::user();
+        $totalWeight = 0;
+        $items = [];
+        $token = '664f15d1db303eb79e314231cc33a9d5a3d29fd0'; // Replace with your actual token (ensure it's kept confidential)
+        $url = 'https://server2-api.vision-log.com/matajer?token=' . $token;
+        $i = 0;
+        foreach ($order->orderItems as $orderItem) {
+            $totalWeight += $orderItem->product->weight * $orderItem->quantity;
+
+            $items[] = [
+                'englishName' => (string) $orderItem->product->name_en,
+                'itemType' => '',
+                'itemName' => (string)  $orderItem->product->name_ar,
+                'itemValue' => (string)  $orderItem->product->final_price * $orderItem->quantity . '',
+            ];
+        }
+
+        // return $items;
+
+        $data = [
+            'reciever' => [
+                'address' => $dropOffAddress->address_1,
+                'street' => $dropOffAddress->address_1,
+                'city' => $dropOffAddress->city,
+                'mobile' => $pickupUser->phone ?? "50000000",
+                'mailBox' => null,
+                'phone' => $pickupUser->phone ?? "50000000",
+                'countryCode' => 'SA',
+                'name' => $user->name,
+                'company' => null,
+                'postCode' => $dropOffAddress->zip,
+                'prov' => 'Makkah Province',
+            ],
+            'sender' => [
+                'address' => $pickupAddress->adress ?? '',
+                'street' => null,
+                'city' => $pickupAddress->city ?? "",
+                'mobile' => $pickupUser->phone ?? "50000000",
+                'mailBox' => null,
+                'phone' => $pickupUser->phone ?? "50000000",
+                'countryCode' => 'SA',
+                'name' => $pickupUser->name,
+                'company' => null,
+                'postCode' => null,
+                'prov' => 'Riyadh Province',
+            ],
+            'items' => ($items),
+            'weight' =>  $totalWeight,
+        ];
+
+        $client = new \GuzzleHttp\Client();
+
+        try {
+            $response = $client->post($url, [
+                'json' => $data,
+            ]);
+
+            if ($response->getStatusCode() === 200) {
+                // Handle successful response (parse JSON, etc.)
+                $responseData = json_decode($response->getBody(), true);
+                // ... process response data
+                session()->flash('Add', ' تم ارسال الطلبيه بنجاح');
+                return back();
+            } else {
+                // Handle error response
+                return response()->json([
+                    'message' => 'API request failed with status code ' . $response->getStatusCode(),
+                ], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Handle exceptions
+            session()->flash('delete', 'لم يتم ارسال الطلبيه');
+            return back();
+        }
     }
 }

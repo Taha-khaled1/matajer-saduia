@@ -112,7 +112,7 @@ class AuthController extends Controller
         if ($request->type == "vendor") {
             $category = new ShippingCompanies;
             $category->name_ar = "شركة فيجن";
-            $category->cost = "40";
+            $category->cost = "25";
             $category->user_id = $user->id;
             $category->save();
         }

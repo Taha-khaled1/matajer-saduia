@@ -27,8 +27,8 @@ class ShippingCompaniesController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            // 'name_en' => 'required|unique:categories|max:100',
-            'name_ar' => 'required|unique:categories|max:100',
+            // 'name_en' => 'required|unique:shipping_companies|max:100',
+            'name_ar' => 'required|unique:shipping_companies|max:100',
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             // 'status' => 'boolean',
             'cost' => 'required',
@@ -46,7 +46,7 @@ class ShippingCompaniesController extends Controller
         ]);
 
         if ($validator->fails()) {
-            session()->flash('delete', 'لم يتم حفظ القسم بسبب مشكله ما');
+            session()->flash('delete', 'لم يتم حفظ شركة الشحن بسبب مشكله ما');
 
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -55,59 +55,36 @@ class ShippingCompaniesController extends Controller
         $category->cost = $request->input('cost');
         $category->user_id = Auth::user()->id;
         $category->save();
-        session()->flash('Add', 'تم اضافة القسم بنجاح ');
+        session()->flash('Add', 'تم اضافة شركة الشحن بنجاح ');
 
-        return redirect()->route('shipping_companies')->with('success', 'Category created successfully');
+        return back();
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name_en' => 'required|max:100|unique:categories,name_en,' . $request->id . ',id',
-            'name_ar' => 'required|max:100|unique:categories,name_ar,' . $request->id . ',id',
-            'image' => 'nullable|image',
-            'status' => 'boolean',
-            'arrange' => 'integer',
-        ], [
-            'name_en.required' => 'يرجى إدخال اسم الفئة باللغة الإنجليزية',
-            'name_en.max' => 'يجب أن يكون طول اسم الفئة باللغة الإنجليزية حتى 100 حرف',
-            'name_en.unique' => 'اسم الفئة باللغة الإنجليزية مسجل بالفعل',
-            'name_ar.required' => 'يرجى إدخال اسم الفئة باللغة العربية',
-            'name_ar.max' => 'يجب أن يكون طول اسم الفئة باللغة العربية حتى 100 حرف',
-            'name_ar.unique' => 'اسم الفئة باللغة العربية مسجل بالفعل',
-            'image.image' => 'يجب أن تكون الصورة من نوع صورة',
-            'status.boolean' => 'حالة الفئة يجب أن تكون صحيحة أو خاطئة',
-            'arrange.integer' => 'الترتيب يجب أن يكون عددًا صحيحًا',
-        ]);
+            'name_ar' => 'required|max:100|unique:shipping_companies,name_ar,' . $request->id . ',id',
+
+        ],);
 
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $category = Category::findOrFail($request->id);
+        $category = ShippingCompanies::findOrFail($request->id);
 
         $data = $request->except(['_token', '_method']);
-
-        if ($request->hasFile('image')) {
-            // Delete the existing image
-            $this->deleteImage($category->image);
-
-            // Save the new image
-            $data['image'] =  $this->saveImage($request->file('image'), 'category');
-            $data['image'] = 'imagesfp/category/' . $data['image'];
-        }
-
         $category->update($data);
-        session()->flash('Add', 'تم تحديث بيانات القسم بنجاح ');
-        return redirect()->route('categories.index')->with('success', 'Category updated successfully');
+        session()->flash('Add', 'تم تحديث بيانات شركة الشحن بنجاح ');
+        return back();
     }
 
     public function destroy(Request $request)
     {
         $category = ShippingCompanies::find($request->id);
         $category->delete();
-        session()->flash('delete', 'تم حذف القسم ');
-        return redirect()->route('categories.index')->with('success', 'Category deleted successfully');
+        session()->flash('delete', 'تم حذف شركة الشحن ');
+        return back();
     }
 }

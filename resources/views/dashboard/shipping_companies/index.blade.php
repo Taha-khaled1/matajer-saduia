@@ -113,7 +113,7 @@
                                     <th class="wd-15p border-bottom-0">اسم شركة الشحن</th>
                                     <th class="wd-15p border-bottom-0">تلكفة شركة الشحن</th>
                                     <th class="wd-15p border-bottom-0">وقت الانشاء</th>
-                                    {{-- <th class="wd-15p border-bottom-0">العمليات</th> --}}
+                                    <th class="wd-15p border-bottom-0">العمليات</th>
 
                                 </tr>
                             </thead>
@@ -133,16 +133,13 @@
                                         <td>{{ $catogery->name_ar }}</td>
                                         <td>{{ $catogery->cost }}</td>
                                         <td>{{ $catogery->created_at }}</td>
-                                        {{-- <td>
+                                        <td>
                                             <div class="d-flex">
-                                           
-                                                <a class="modal-effect btn btn-sm btn-info btn-sm ml-2"
-                                                    data-effect="effect-scale" data-id="{{ $catogery->id }}"
-                                                    data-name_ar="{{ $catogery->name_ar }}" href="#exampleModal2"
-                                                    title="تعديل"><i class="las la-pen">
 
-                                                    </i>
-                                                </a>
+                                                <a class="modal-effect btn btn-sm btn-info" data-effect="effect-scale"
+                                                    data-id="{{ $catogery->id }}" data-name_ar="{{ $catogery->name_ar }}"
+                                                    data-cost="{{ $catogery->cost }}" data-toggle="modal"
+                                                    href="#exampleModal2" title="تعديل"><i class="las la-pen"></i></a>
 
 
 
@@ -152,7 +149,7 @@
                                                         class="las la-trash"></i></a>
                                             </div>
 
-                                        </td> --}}
+                                        </td>
                                     </tr>
                                 @endforeach
 
@@ -184,32 +181,9 @@
                                 <input type="text" class="form-control" id="name_ar" name="name_ar" required>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">تكلفة السحن</label>
+                                <label for="exampleInputEmail1">تكلفة الشحن</label>
                                 <input type="number" class="form-control" id="cost" name="cost" required>
                             </div>
-                            {{-- <div class="form-group">
-                                <label for="exampleInputEmail1">اسم شركة الشحن باللغه الانجليزيه</label>
-                                <input type="text" class="form-control" id="name_en" name="name_en" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">ترتيب شركة الشحن </label>
-                                <input type="number" class="form-control" id="arrange" name="arrange">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="image">تحميل صوره للشركة شحن </label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="image" name="image"
-                                        required>
-                                    <label class="custom-file-label" for="image">اختار صوره</label>
-                                </div>
-                                <img src="#" id="preview"
-                                    style="display: none; max-width: 200px; max-height: 200px;">
-                            </div> --}}
-
-
-
-
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success">تاكيد</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
@@ -232,17 +206,21 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('shipping_companies.update', 0) }}" method="post"
+                        <form action="{{ route('shipping_companies.update') }}" method="post"
                             enctype="multipart/form-data">
-                            {{ method_field('PUT') }}
+                            {{ method_field('post') }}
                             {{ csrf_field() }}
                             <input type="hidden" name="id" id="id" value="">
 
-                            {{-- <input type="hidden" name="status" id="status" value=""> --}}
+
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">اسم شركة الشحن باللغه العربيه</label>
                                 <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">تكلفة السحن</label>
+                                <input type="number" class="form-control" id="cost" name="cost" required>
                             </div>
                             {{-- <div class="form-group">
                                 <label for="exampleInputEmail1">اسم شركة الشحن باللغه الانجليزيه</label>
@@ -339,23 +317,18 @@
     </script>
 
     <script>
-        const appUrl = "{{ url('/') }}";
         $(document).ready(function() {
             $('#exampleModal2').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget)
                 var id = button.data('id')
                 var name_ar = button.data('name_ar')
-                var name_en = button.data('name_en')
-                var arrange = button.data('arrange')
-                var status = button.data('status')
-                var image = button.data('image')
+                var cost = button.data('cost')
+
                 var modal = $(this)
                 modal.find('.modal-body #id').val(id)
                 modal.find('.modal-body #name_ar').val(name_ar)
-                modal.find('.modal-body #preview-image').attr('src', appUrl + "/" + image)
-                modal.find('.modal-body #name_en').val(name_en)
-                modal.find('.modal-body #arrange').val(arrange)
-                modal.find('.modal-body #status').val(status)
+                modal.find('.modal-body #cost').val(cost)
+
             })
         });
     </script>

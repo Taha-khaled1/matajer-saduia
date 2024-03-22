@@ -29,6 +29,7 @@ return new class extends Migration
             $table->float('shipping')->default(0);
             $table->float('discount')->default(0);
             $table->float('subtotal')->default(0);
+            $table->float('weight')->default(0);
             $table->float('total')->default(0);
             $table->text('description')->nullable();
             $table->timestamp('delivery_time')->nullable();

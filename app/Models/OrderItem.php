@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderItem extends Model
 {
-    use HasFactory;    
-    protected $table = 'order_items'; 
+    use HasFactory;
+    protected $table = 'order_items';
     public $timestamps = false;
-    protected $guarded = [];    
+    protected $guarded = [];
     public function order()
     {
-        return $this->belongsTo(Order::class,'order_id');
+        return $this->belongsTo(Order::class, 'order_id');
     }
 
     public function product()

@@ -33,12 +33,12 @@
         .status {
             /* background-color: aqua; */
             /* color: aqua;
-                                                                                                                                                                                                                                                                                                                                                                                                                -moz-background-origin: border-box */
+                                                                                                                                                                                                                                                                                                                                                                                                                        -moz-background-origin: border-box */
         }
 
         /* .btn-secondary {
-                                                                                                                                                                                                                        background-color: #0049ff !important;
-                                                                                                                                                                                                                    } */
+                                                                                                                                                                                                                                background-color: #0049ff !important;
+                                                                                                                                                                                                                            } */
     </style>
 @endsection
 
@@ -226,7 +226,10 @@
                                                 href="{{ route('orders.invoice', $order->id) }}" title="عرض">
                                                 <i class="las la-eye"></i>
                                             </a>
-
+                                            <a class="btn btn-sm btn-primary"
+                                                href="{{ route('orders.createShipment', $order->id) }}" title="عرض">
+                                                <i class="las la-car"></i>
+                                            </a>
 
                                             <a class="modal-effect btn btn-sm btn-info btn-sm ml-2"
                                                 data-effect="effect-scale" data-id="{{ $order->id }}"

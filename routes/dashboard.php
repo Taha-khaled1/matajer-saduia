@@ -107,6 +107,8 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/orders', 'index')->name('orders');
         Route::get('/orders/spacial', 'spacialOrderIndex')->name('orders.spacial');
+        Route::get('/orders/createShipment/{id}', 'createShipment')->name('orders.createShipment');
+
         Route::get('/orders/pendingOrders', 'pendingOrders')->name('orders.pendingOrders');
         Route::get('/orders/processingOrders', 'processingOrders')->name('orders.processingOrders');
         Route::get('/orders/deliveringOrders', 'deliveringOrders')->name('orders.deliveringOrders');

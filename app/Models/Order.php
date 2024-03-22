@@ -15,6 +15,10 @@ class Order extends Model
     {
         return $this->hasOne(MarketersReports::class);
     }
+    public function products()
+    {
+        return $this->hasManyThrough(Product::class, OrderItem::class, 'product_id');
+    }
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
