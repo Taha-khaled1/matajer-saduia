@@ -11,18 +11,18 @@ use App\Traits\ImageProcessing;
 class CategoryController extends Controller
 {
 
-       function __construct()
+    function __construct()
     {
-         $this->middleware('permission:جميع الاقسام', ['only' => ['index','updateStatusCatogery']]);
-         $this->middleware('permission:اضافة قسم', ['only' => ['store']]);
-         $this->middleware('permission:تعديل قسم', ['only' => ['update']]);
-         $this->middleware('permission:حذف قسم', ['only' => ['destroy']]);
+        $this->middleware('permission:جميع الاقسام', ['only' => ['index', 'updateStatusCatogery']]);
+        $this->middleware('permission:اضافة قسم', ['only' => ['store']]);
+        $this->middleware('permission:تعديل قسم', ['only' => ['update']]);
+        $this->middleware('permission:حذف قسم', ['only' => ['destroy']]);
     }
     use ImageProcessing;
 
     public function index()
     {
-        $categories = Category::orderBy('arrange')->orderByDesc('created_at')->get();
+        $categories = Category::orderBy('arrange')->orderByDesc('created_at')->paginate(10);
         return view('dashboard.catogery.index', compact('categories'));
     }
 
@@ -60,11 +60,11 @@ class CategoryController extends Controller
 
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $data['image'] = $this->saveImage($request->file('image'),'category');
+        $data['image'] = $this->saveImage($request->file('image'), 'category');
         $category = new Category;
         $category->name_en = $request->input('name_en');
         $category->name_ar = $request->input('name_ar');
-        $category->image =  'imagesfp/category/'.$data['image'];
+        $category->image =  'imagesfp/category/' . $data['image'];
         $category->status = $request->input('status', true);
         $category->arrange = $request->input('arrange', 1);
         $category->save();
@@ -73,9 +73,9 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')->with('success', 'Category created successfully');
     }
 
-     public function updateStatusCatogery(Request $request)
+    public function updateStatusCatogery(Request $request)
     {
-       $isToggleOnString = (string) $request->isToggleOn;
+        $isToggleOnString = (string) $request->isToggleOn;
         $status = true;
         $categoryId = $request->input('categoryId');
         if ($isToggleOnString == "true") {
@@ -92,7 +92,7 @@ class CategoryController extends Controller
             // Update the status field
             $category->status = $status;
             $category->save();
-           
+
             return response()->json(['success' => true, 'message' => 'category status  updated successfully']);
         }
 
@@ -103,53 +103,53 @@ class CategoryController extends Controller
         //
     }
 
-  
+
     public function edit($id)
     {
         //
     }
 
-public function update(Request $request, $id)
-{
-    $validator = Validator::make($request->all(), [
-        'name_en' => 'required|max:100|unique:categories,name_en,' . $request->id . ',id',
-        'name_ar' => 'required|max:100|unique:categories,name_ar,' . $request->id . ',id',
-        'image' => 'nullable|image',
-        'status' => 'boolean',
-        'arrange' => 'integer',
-    ], [
-        'name_en.required' => 'يرجى إدخال اسم الفئة باللغة الإنجليزية',
-        'name_en.max' => 'يجب أن يكون طول اسم الفئة باللغة الإنجليزية حتى 100 حرف',
-        'name_en.unique' => 'اسم الفئة باللغة الإنجليزية مسجل بالفعل',
-        'name_ar.required' => 'يرجى إدخال اسم الفئة باللغة العربية',
-        'name_ar.max' => 'يجب أن يكون طول اسم الفئة باللغة العربية حتى 100 حرف',
-        'name_ar.unique' => 'اسم الفئة باللغة العربية مسجل بالفعل',
-        'image.image' => 'يجب أن تكون الصورة من نوع صورة',
-        'status.boolean' => 'حالة الفئة يجب أن تكون صحيحة أو خاطئة',
-        'arrange.integer' => 'الترتيب يجب أن يكون عددًا صحيحًا',
-    ]);
-       
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name_en' => 'required|max:100|unique:categories,name_en,' . $request->id . ',id',
+            'name_ar' => 'required|max:100|unique:categories,name_ar,' . $request->id . ',id',
+            'image' => 'nullable|image',
+            'status' => 'boolean',
+            'arrange' => 'integer',
+        ], [
+            'name_en.required' => 'يرجى إدخال اسم الفئة باللغة الإنجليزية',
+            'name_en.max' => 'يجب أن يكون طول اسم الفئة باللغة الإنجليزية حتى 100 حرف',
+            'name_en.unique' => 'اسم الفئة باللغة الإنجليزية مسجل بالفعل',
+            'name_ar.required' => 'يرجى إدخال اسم الفئة باللغة العربية',
+            'name_ar.max' => 'يجب أن يكون طول اسم الفئة باللغة العربية حتى 100 حرف',
+            'name_ar.unique' => 'اسم الفئة باللغة العربية مسجل بالفعل',
+            'image.image' => 'يجب أن تكون الصورة من نوع صورة',
+            'status.boolean' => 'حالة الفئة يجب أن تكون صحيحة أو خاطئة',
+            'arrange.integer' => 'الترتيب يجب أن يكون عددًا صحيحًا',
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        $category = Category::findOrFail($request->id);
+
+        $data = $request->except(['_token', '_method']);
+
+        if ($request->hasFile('image')) {
+            // Delete the existing image
+            $this->deleteImage($category->image);
+
+            // Save the new image
+            $data['image'] =  $this->saveImage($request->file('image'), 'category');
+            $data['image'] = 'imagesfp/category/' . $data['image'];
+        }
+
+        $category->update($data);
+        session()->flash('Add', 'تم تحديث بيانات القسم بنجاح ');
+        return redirect()->route('categories.index')->with('success', 'Category updated successfully');
     }
-    $category = Category::findOrFail($request->id );
-    
-    $data = $request->except(['_token', '_method']);
-
-    if ($request->hasFile('image')) {
-        // Delete the existing image
-        $this->deleteImage($category->image);
-        
-        // Save the new image
-        $data['image'] =  $this->saveImage($request->file('image'),'category');
-        $data['image'] = 'imagesfp/category/' . $data['image'];
-    }
-
-    $category->update($data);
-     session()->flash('Add', 'تم تحديث بيانات القسم بنجاح ');
-    return redirect()->route('categories.index')->with('success', 'Category updated successfully');
-}
 
     public function destroy(Request $request)
     {

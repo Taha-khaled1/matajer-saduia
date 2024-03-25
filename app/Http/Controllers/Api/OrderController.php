@@ -10,6 +10,7 @@ use App\Models\MarketersReports;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\UserAddress;
+use App\Models\Withdrawal;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -217,6 +218,30 @@ class OrderController extends Controller
             return response()->json(['message' => __('custom.failed_to_retrieve_data'), 'error' => $e->getMessage()], 500);
         }
     }
+
+
+    public function uploadMotalpaAffalite(Request $request)
+    {
+        $total = 0;
+
+        MarketersReports::where("status", 'procedure')->get()->map(function ($item) use (&$total) {
+            $item->status = "sold";
+            $total += $item->money;
+            $item->save();
+        });
+        if ($total == 0) {
+            return response()->json(['message' => __('يجب ان يكون هناك طلبات معلقه')], 400);
+        }
+        $withdrawal = new Withdrawal();
+        $withdrawal->total = $total;
+        $withdrawal->type = "suspended";
+        $withdrawal->user_id = $request->user->id;
+        $withdrawal->save();
+
+        return response()->json(['message' => "تم ارسال المطالبه بنجاح"], 200);
+    }
+
+
     function Reorder(Request $request)
     {
         try {

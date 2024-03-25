@@ -31515,10 +31515,11 @@ table.dataTable thead .sorting_desc_disabled:before {
   display: none;
 }
 
-.dataTables_paginate .pagination .page-link {
+hidden pag taha .dataTables_paginate .pagination .page-link {
   padding: 0.5rem 0.75rem;
   background-color: #ecf0fa;
   border: 1px solid #cdd7ef;
+  display: none;
 }
 
 .dataTables_paginate .page-item.active .page-link {

@@ -59,7 +59,7 @@ class AuthController extends Controller
     public function getAds(Request $request)
     {
 
-        $ads = Advertisement::where("status", true)->where("show", false)->where("type", "ads")->first();
+        $ads = Advertisement::where("status", true)->where("show", false)->where("type", "ads")->get();
 
         return response()->json([
             "data" => $ads,

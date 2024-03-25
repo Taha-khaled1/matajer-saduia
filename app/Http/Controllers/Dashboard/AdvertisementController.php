@@ -53,16 +53,18 @@ class AdvertisementController extends Controller
             'image.mimes' => 'صيغ الصور المدعومة هي: jpeg, png, jpg, gif, svg',
             'status.boolean' => 'قيمة حالة الفئة يجب أن تكون صحيحة أو خاطئة',
         ]);
-
+        $user = Auth::user();
         if ($validator->fails()) {
             session()->flash('delete', 'لم يتم حفظ الاعلان بسبب مشكله ما');
 
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        if (Auth::user()->subscription == 'normal') {
-            session()->flash('Add', 'يجب ترقية الاشتراك');
+        if (!$user->hasRole('admin')) {
+            if (Auth::user()->subscription == 'normal') {
+                session()->flash('Add', 'يجب ترقية الاشتراك');
 
-            return redirect()->route('advertisements.index')->with('success', 'Category created successfully');
+                return redirect()->route('advertisements.index')->with('success', 'Category created successfully');
+            }
         }
 
         $category = new Advertisement;

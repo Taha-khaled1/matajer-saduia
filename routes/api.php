@@ -80,6 +80,7 @@ Route::group(['middleware' => 'ChangeLanguage'], function () {
             Route::get('/users/for/affalite', 'getUsersforAffalite');
             Route::post('/orders/cancel', 'cancelOrder');
             Route::post('/orders/reorder', 'Reorder');
+            Route::post('/orders/uploadMotalpaAffalite', 'uploadMotalpaAffalite');
         });
         Route::controller(UserController::class)->group(function () {
             Route::get('userInformation', 'getUserInfo');
