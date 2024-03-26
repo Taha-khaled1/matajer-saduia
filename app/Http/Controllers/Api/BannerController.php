@@ -14,7 +14,7 @@ class BannerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke($country_id)
+    public function __invoke()
     {
         try {
             $banners = Banner::orderBy('arrange')->get();
@@ -26,7 +26,7 @@ class BannerController extends Controller
 
             ], 200);
         } catch (\Throwable $e) {
-            return response()->json(['message' => __('custom.failed_to_retrieve_data') . ' - ' . $e, 'status_code' => 500], 500);
+            return response()->json(['message' => __('custom.failed_to_retrieve_data'), 'status_code' => 500], 500);
         }
     }
 }
