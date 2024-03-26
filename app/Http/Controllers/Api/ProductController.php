@@ -81,6 +81,16 @@ class ProductController extends Controller
         try {
             $products = Product::activeAndSorted()->paginate(4);
             $productshot = Product::ActiveAndSortedHotitem()->paginate(4);
+            $now = Carbon::now();
+
+            // Query products with an active discount
+            $products = Product::whereNotNull('discount')
+                ->where('discount_start', '<=', $now)
+                ->where('discount_end', '>=', $now)
+                ->activeAndSorted()
+                ->paginate(4);
+
+
             return response()->json([
                 'products' => [
                     'current_page' => $products->currentPage(),
@@ -98,7 +108,20 @@ class ProductController extends Controller
                 ],
 
 
-
+                'products_offer' => [
+                    'current_page' => $products->currentPage(),
+                    'data' => $products->items(),
+                    'first_page_url' => $products->url(1),
+                    'from' => $products->firstItem(),
+                    'last_page' => $products->lastPage(),
+                    'last_page_url' => $products->url($products->lastPage()),
+                    'next_page_url' => $products->nextPageUrl(),
+                    'path' => $products->path(),
+                    'per_page' => $products->perPage(),
+                    'prev_page_url' => $products->previousPageUrl(),
+                    'to' => $products->lastItem(),
+                    'total' => $products->total(),
+                ],
 
                 'productsHotItem' => [
                     'current_page' => $productshot->currentPage(),
