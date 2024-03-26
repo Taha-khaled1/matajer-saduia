@@ -84,7 +84,7 @@ class ProductController extends Controller
             $now = Carbon::now();
 
             // Query products with an active discount
-            $products = Product::whereNotNull('discount')
+            $productsOffer = Product::whereNotNull('discount')
                 ->where('discount_start', '<=', $now)
                 ->where('discount_end', '>=', $now)
                 ->activeAndSorted()
@@ -109,18 +109,18 @@ class ProductController extends Controller
 
 
                 'products_offer' => [
-                    'current_page' => $products->currentPage(),
-                    'data' => $products->items(),
-                    'first_page_url' => $products->url(1),
-                    'from' => $products->firstItem(),
-                    'last_page' => $products->lastPage(),
-                    'last_page_url' => $products->url($products->lastPage()),
-                    'next_page_url' => $products->nextPageUrl(),
-                    'path' => $products->path(),
-                    'per_page' => $products->perPage(),
-                    'prev_page_url' => $products->previousPageUrl(),
-                    'to' => $products->lastItem(),
-                    'total' => $products->total(),
+                    'current_page' => $productsOffer->currentPage(),
+                    'data' => $productsOffer->items(),
+                    'first_page_url' => $productsOffer->url(1),
+                    'from' => $productsOffer->firstItem(),
+                    'last_page' => $productsOffer->lastPage(),
+                    'last_page_url' => $productsOffer->url($productsOffer->lastPage()),
+                    'next_page_url' => $productsOffer->nextPageUrl(),
+                    'path' => $productsOffer->path(),
+                    'per_page' => $productsOffer->perPage(),
+                    'prev_page_url' => $productsOffer->previousPageUrl(),
+                    'to' => $productsOffer->lastItem(),
+                    'total' => $productsOffer->total(),
                 ],
 
                 'productsHotItem' => [
