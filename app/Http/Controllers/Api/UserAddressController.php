@@ -108,10 +108,10 @@ class UserAddressController extends Controller
                 'name' => 'nullable|string',
                 'email' => 'nullable|email',
                 'phone' => 'nullable|string',
-                'delivery_instruction' => 'nullable|string',
-                'longitude' => 'required|string',
-                'latitudes' => 'required|string',
-                'location_id' => 'required|string',
+                // 'delivery_instruction' => 'nullable|string',
+                // 'longitude' => 'required|string',
+                // 'latitudes' => 'required|string',
+                // 'location_id' => 'required|string',
             ]);
 
             if ($validator->fails()) {
