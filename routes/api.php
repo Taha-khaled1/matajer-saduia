@@ -12,14 +12,23 @@ use App\Http\Controllers\Api\ContactUsController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\PackageController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PopularController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProductReviewController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SettingPageController;
 use App\Http\Controllers\Api\SubCategoryController;
 use App\Http\Controllers\Api\UserAddressController;
 use Illuminate\Support\Facades\Route;
+
+
+
+
+Route::get('packages', [PackageController::class, 'index']);
+Route::post('create-review', [ProductReviewController::class, 'createReview'])->middleware('sanctum');
+Route::post('create-user-review', [ProductReviewController::class, 'createUserReview'])->middleware('sanctum');
 
 
 Route::get('schedule-run', [CommandController::class, 'scheduleCommand'])->name("schedule.run");

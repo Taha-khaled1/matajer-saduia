@@ -14,25 +14,26 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([   
+        $this->call([
             PermissionTableSeeder::class,
             UserTableSeeder::class,
             UserAddressTableSeeder::class,
             CatogeryTableSeeder::class,
             SubCatogeryTableSeeder::class,
+            PackgeTableSeeder::class,
             SizeTableSeeder::class,
             ColorTableSeeder::class,
             ProductTableSeeder::class,
             ProductImageTableSeeder::class,
             SettingsTableSeeder::class,
-            DiscountCouponSeeder::class,  
+            DiscountCouponSeeder::class,
             SettingWebTableSeeder::class,
-            MistanceModeTableSeeder::class,  
+            MistanceModeTableSeeder::class,
             OrderTableSeeder::class,
             OrderItemsTableSeeder::class,
             CountryTableSeeder::class,
             GiftTableSeeder::class,
-            AttributeTableSeeder::class,   
+            AttributeTableSeeder::class,
             BannerTableSeeder::class,
             PaymentGetwayTableSeeder::class,
         ]);

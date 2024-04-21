@@ -16,6 +16,10 @@ class Product extends Model
     protected $appends = ['final_price'];
     // protected $hidden = ['discount_start','discount_end'];
     protected $hidden = ['attribute'];
+    public function prooductReviews()
+    {
+        return $this->hasMany(ProductReview::class);
+    }
     public function subCategory()
     {
         return $this->belongsTo(SubCategory::class, 'sub_category_id');

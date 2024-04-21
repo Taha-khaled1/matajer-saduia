@@ -93,6 +93,28 @@ function statusToArabic($status)
         return 'تم الاسترجاع';
     }
 }
+function successmMssageResponse($message = 'Success', $statusCode = 200, $data = [])
+{
+    return response()->json([
+        'data' => $data,
+        'message' => $message,
+        'status_code' => $statusCode,
+    ], $statusCode);
+}
+
+function successResponse($data = [], $statusCode = 200, $message = 'Success')
+{
+    return response()->json([
+        'data' => $data,
+        'message' => $message,
+        'status_code' => $statusCode,
+    ], $statusCode);
+}
+
+function errorResponse($message, $statusCode = 500, $error = [])
+{
+    return response()->json(['message' => $message, 'status_code' => $statusCode, 'errors' => $error], $statusCode);
+}
 function roleToArabic($status)
 {
 

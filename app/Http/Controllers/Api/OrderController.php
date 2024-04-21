@@ -10,6 +10,7 @@ use App\Models\MarketersReports;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\UserAddress;
+use App\Models\UserReview;
 use App\Models\Withdrawal;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
@@ -79,10 +80,14 @@ class OrderController extends Controller
                         $query->select('id', 'phone', 'address_1', 'country', 'city');
                     },
                 ]
-            )->select("id", 'status', 'payment_status', 'payment_method', 'shipping', 'subtotal', 'total', 'delivery_time', 'created_at', 'user_address_id', 'coupon_id')->find($id);
+            )->select("id", 'status', 'payment_status', 'payment_method', 'shipping', 'subtotal', 'total', 'delivery_time', 'created_at', 'user_address_id', 'shope_id', 'coupon_id')->find($id);
+            $reviews = UserReview::with('user')->where('vendor_id', $order->shope_id)->get();
+            $averageRating = UserReview::where('vendor_id', $order->shope_id)->avg('rating');
             return response()->json([
+                'averageRating' => $averageRating,
                 'status_code' => 200,
                 'message' => 'Success',
+                'reviews' =>  $reviews,
                 'order' => $order,
 
             ], 200);
@@ -202,11 +207,11 @@ class OrderController extends Controller
             }
 
             DB::commit();
-            if ($paymentMethod == 'paypal') {
-                // return redirect()->route('payment', [
-                //     'orderItems' => $orderItems,
-                //     'order_id' => $orderId,
-                // ]);
+            if ($paymentMethod == 'paypal' || $paymentMethod == 'stripe') {
+                return redirect()->route('payment-payWithTapPayment', [
+                    'orderItems' => $items,
+                    'order_id' => $orderId,
+                ]);
             } else {
                 // sendNotificationToAdmin('اضافة طلبيه', ' قام العميل ' . $user->name . ' بانشاء طلبيه جديده ' . ' معرف الطلبيه ' . $orderId, env("BASE_URL") . "/dashboard/orders/invoice/" . $orderId);
                 // $user->refund -= $orderPrice['check_out']['refound_money'];

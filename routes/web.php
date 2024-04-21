@@ -47,6 +47,7 @@ Route::get('go-payment', [PayPalController::class, 'goPayment'])->name('payment.
 // Route::get('/payments/verify/{payment}', [FrontController::class, 'verifyWithTap'])->name('payment-verify');
 // ==================================================
 Route::get('/payments/payWithTap', [PayPalController::class, 'payWithTap'])->name('payment-payWithTap');
+Route::get('/payments/payWithTapPayment', [PayPalController::class, 'payWithTapPayment'])->name('payment-payWithTapPayment');
 Route::get('/payment/verify', [PayPalController::class, 'verifyWithTap'])->name('verify-payment');
 // ==================================================
 // Route::get('/payments/verify/{payment}', [FrontController::class, 'verifyWithTap'])->name('payment-verify');

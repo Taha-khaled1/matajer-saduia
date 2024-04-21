@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\UserReview;
 use DB;
 use Illuminate\Http\Request;
 
@@ -29,27 +30,26 @@ class SettingController extends Controller
         $products = Product::where('user_id', '=', $merchantId)->activeAndSorted()->take(10)->get();
         $totalProducts = Product::where('user_id', $merchantId)->count();
 
-        $totalviews = Product::where('user_id', $merchantId)->sum('views');
+        // $totalviews = Product::where('user_id', $merchantId)->sum('views');
 
         $totalRevenue = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
             ->join('products', 'order_items.product_id', '=', 'products.id')
             ->where('orders.status', "!=", "orders.cancelled")
             ->where('products.user_id', $merchantId)
             ->sum(DB::raw('order_items.quantity * products.price'));
+        $averageRating = UserReview::where('vendor_id', $merchantId)->avg('rating');
+        $totalSales = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->where('orders.status', '!=', 'cancelled')
+            ->where('products.user_id', $merchantId)
+            ->sum('order_items.quantity');
+        $reviews = UserReview::with('user')->where('vendor_id', $merchantId)->get();
 
-    $totalSales = OrderItem::join('orders', 'order_items.order_id', '=', 'orders.id')
-    ->join('products', 'order_items.product_id', '=', 'products.id')
-    ->where('orders.status', '!=', 'cancelled')
-    ->where('products.user_id', $merchantId)
-    ->sum('order_items.quantity');
-        $products->each(function ($product) {
-            // The 'final_price' attribute will be automatically accessed using the accessor
-            $product->final_price;
-        });
-
-        return response()->json([            
+        return response()->json([
             'totalProducts' => $totalProducts,
             'totalSales' => $totalSales,
+            'reviews' => $reviews,
+            'averageRating' => $averageRating,
             'totalRevenue' => $totalRevenue,
             'shop' => $setting,
             'products' => $products,

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Attribute;
+use App\Models\Package;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,7 +16,8 @@ class AttributeTableSeeder extends Seeder
      */
     public function run()
     {
-       Attribute::create([
+
+        Attribute::create([
             'sku' => 'TS001-BLACK-S',
             'image' => 'black_tshirt_small.jpg',
             'price' => 710.0,
@@ -36,7 +38,7 @@ class AttributeTableSeeder extends Seeder
             'size_id' => 1,
         ]);
 
-       Attribute::create([
+        Attribute::create([
             'sku' => 'TS001-BLACK-W',
             'image' => 'black_tshirt_small.jpg',
             'price' => 718.0,
@@ -92,7 +94,7 @@ class AttributeTableSeeder extends Seeder
 
 
 
-    Attribute::create([
+        Attribute::create([
             'sku' => 'KB004-RGB',
             'image' => 'rgb_gaming_keyboard.jpg',
             'price' => 200,
@@ -112,7 +114,7 @@ class AttributeTableSeeder extends Seeder
             'color_id' => null,
             'size_id' => 3, // Assuming this bag doesn't have a specific size
         ]);
-       Attribute::create([
+        Attribute::create([
             'sku' => 'TS001-BLACK-S',
             'image' => 'black_tshirt_small.jpg',
             'price' => 485,
@@ -121,6 +123,5 @@ class AttributeTableSeeder extends Seeder
             'color_id' => null,
             'size_id' => 1,
         ]);
-
     }
 }

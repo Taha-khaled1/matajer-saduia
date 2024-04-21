@@ -15,94 +15,94 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-   function __construct()
+    function __construct()
     {
-         $this->middleware('permission:الصفحه الرئيسيه', ['only' => ['main','getStatistics']]);
-
+        $this->middleware('permission:الصفحه الرئيسيه', ['only' => ['main', 'getStatistics']]);
     }
-  public function main()
-  {
-    $totalProduct = Product::count();
-    $totalCatogeries = Category::count();
-    $totalSubCatogeries = SubCategory::count();
-    $totalcountery = Country::count();
-    $productUnActive = Product::where('status', 0)->count();
-    $productActive = Product::where('status', 1)->count();
-    $mostViewedProducts = Product::orderBy('views', 'desc')->limit(5)->get();
-    $totalOrder = Order::count();
-    $totalUser = User::count();
-    $last5Customers = User::orderBy('created_at', 'desc')->take(5)->get();
-    $totalRevenue = Order::where('status',"!=","cancelled")->sum('total');
-    $topSellingProducts = OrderItem::select('product_id', DB::raw('SUM(quantity) as total_sales'))
-        ->groupBy('product_id')
-        ->orderByDesc('total_sales')
-        ->take(5) // Change this number to get more or fewer top-selling products
-        ->get();
-    $ordersBypayment_status= Order::select('payment_status', DB::raw('COUNT(*) as total_orders'))
-        ->groupBy('payment_status')
-        ->get();
-    // If you need the product details, you can join the 'products' table
-    $topSellingProductsWithDetails = $topSellingProducts->map(function ($item) {
-        $product = Product::find($item->product_id);
-        $item->product = $product;
-        return $item;
-    });
-    $ordersByPaymentMethod = Order::select('payment_method', DB::raw('COUNT(*) as total_orders'))
-      ->groupBy('payment_method')
-      ->get();
-    $cancelledOrders = Order::where('cancelled', true)->count();
-    $Orderpendings = Order::where('status', 'pending')->count();
-    $Ordercompleted = Order::where('status', 'completed')->count();
-    $Ordercancelled = Order::where('status', 'cancelled')->count();
-     $lastFiveOrders = Order::orderBy('created_at', 'desc')
-                           ->limit(5)
-                           ->get();
+    public function main(Request $request)
+    {
+        // return $request->all();
+        $totalProduct = Product::count();
+        $totalCatogeries = Category::count();
+        $totalSubCatogeries = SubCategory::count();
+        $totalcountery = Country::count();
+        $productUnActive = Product::where('status', 0)->count();
+        $productActive = Product::where('status', 1)->count();
+        $mostViewedProducts = Product::orderBy('views', 'desc')->limit(5)->get();
+        $totalOrder = Order::count();
+        $totalUser = User::count();
+        $last5Customers = User::orderBy('created_at', 'desc')->take(5)->get();
+        $totalRevenue = Order::where('status', "!=", "cancelled")->sum('total');
+        $topSellingProducts = OrderItem::select('product_id', DB::raw('SUM(quantity) as total_sales'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_sales')
+            ->take(5) // Change this number to get more or fewer top-selling products
+            ->get();
+        $ordersBypayment_status = Order::select('payment_status', DB::raw('COUNT(*) as total_orders'))
+            ->groupBy('payment_status')
+            ->get();
+        // If you need the product details, you can join the 'products' table
+        $topSellingProductsWithDetails = $topSellingProducts->map(function ($item) {
+            $product = Product::find($item->product_id);
+            $item->product = $product;
+            return $item;
+        });
+        $ordersByPaymentMethod = Order::select('payment_method', DB::raw('COUNT(*) as total_orders'))
+            ->groupBy('payment_method')
+            ->get();
+        $cancelledOrders = Order::where('cancelled', true)->count();
+        $Orderpendings = Order::where('status', 'pending')->count();
+        $Ordercompleted = Order::where('status', 'completed')->count();
+        $Ordercancelled = Order::where('status', 'cancelled')->count();
+        $lastFiveOrders = Order::orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
 
 
 
-  
 
-    //  return response([
-    //    'ordersBypayment_status' => $ordersBypayment_status,
-    //   'totalProduct' => $totalProduct,     
-    //   'totalCatogeries' => $totalCatogeries,
-    //   'totalSubCatogeries' => $totalSubCatogeries,
-    //   'totalcountery' => $totalcountery,
-    //   'productUnActive' => $productUnActive,
-    //   'productActive' => $productActive,
-    //   'mostViewedProducts' => $mostViewedProducts,
-    //   'totalOrder' => $totalOrder,
-    //   'totalUser' => $totalUser,
-    //   'last5Customers' => $last5Customers,
-    //   'totalRevenue' => $totalRevenue,
-    //   'topSellingProducts' => $topSellingProducts,
-    //   'ordersByPaymentMethod' => $ordersByPaymentMethod,
-    //   'cancelledOrders' => $cancelledOrders,
-    // ]);
-    return view('dashboard.home.index', [
-       'ordersBypayment_status' => $ordersBypayment_status,
-      'totalProduct' => $totalProduct,     
-      'totalCatogeries' => $totalCatogeries,
-      'totalSubCatogeries' => $totalSubCatogeries,
-      'totalcountery' => $totalcountery,
-      'productUnActive' => $productUnActive,
-      'productActive' => $productActive,
-      'mostViewedProducts' => $mostViewedProducts,
-      'totalOrder' => $totalOrder,
-      'totalUser' => $totalUser,
-      'last5Customers' => $last5Customers,
-      'totalRevenue' => $totalRevenue,
-      'topSellingProducts' => $topSellingProducts,
-      'ordersByPaymentMethod' => $ordersByPaymentMethod,
-      'cancelledOrders' => $cancelledOrders,
-      'Ordercancelled' => $Ordercancelled,
-      'Ordercompleted' => $Ordercompleted,
-      'Orderpendings' => $Orderpendings,
-      'lastFiveOrders' => $lastFiveOrders,
-  
-    ]);
-  } 
-     public function getStatistics()
+
+        //  return response([
+        //    'ordersBypayment_status' => $ordersBypayment_status,
+        //   'totalProduct' => $totalProduct,     
+        //   'totalCatogeries' => $totalCatogeries,
+        //   'totalSubCatogeries' => $totalSubCatogeries,
+        //   'totalcountery' => $totalcountery,
+        //   'productUnActive' => $productUnActive,
+        //   'productActive' => $productActive,
+        //   'mostViewedProducts' => $mostViewedProducts,
+        //   'totalOrder' => $totalOrder,
+        //   'totalUser' => $totalUser,
+        //   'last5Customers' => $last5Customers,
+        //   'totalRevenue' => $totalRevenue,
+        //   'topSellingProducts' => $topSellingProducts,
+        //   'ordersByPaymentMethod' => $ordersByPaymentMethod,
+        //   'cancelledOrders' => $cancelledOrders,
+        // ]);
+        return view('dashboard.home.index', [
+            'ordersBypayment_status' => $ordersBypayment_status,
+            'totalProduct' => $totalProduct,
+            'totalCatogeries' => $totalCatogeries,
+            'totalSubCatogeries' => $totalSubCatogeries,
+            'totalcountery' => $totalcountery,
+            'productUnActive' => $productUnActive,
+            'productActive' => $productActive,
+            'mostViewedProducts' => $mostViewedProducts,
+            'totalOrder' => $totalOrder,
+            'totalUser' => $totalUser,
+            'last5Customers' => $last5Customers,
+            'totalRevenue' => $totalRevenue,
+            'topSellingProducts' => $topSellingProducts,
+            'ordersByPaymentMethod' => $ordersByPaymentMethod,
+            'cancelledOrders' => $cancelledOrders,
+            'Ordercancelled' => $Ordercancelled,
+            'Ordercompleted' => $Ordercompleted,
+            'Orderpendings' => $Orderpendings,
+            'lastFiveOrders' => $lastFiveOrders,
+
+        ]);
+    }
+    public function getStatistics()
     {
         $orders = Order::selectRaw('MONTH(created_at) as month, total, status')
             ->whereYear('created_at', date('Y'))
@@ -152,6 +152,6 @@ class DashboardController extends Controller
         ];
 
         return response()->json($data)->header('Access-Control-Allow-Origin', '*')
-        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
 }
