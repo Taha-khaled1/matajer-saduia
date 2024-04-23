@@ -12,6 +12,7 @@ use App\Models\Product;
 use App\Models\UserAddress;
 use App\Models\UserReview;
 use App\Models\Withdrawal;
+use App\Traits\WhatsAppTrait;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class OrderController extends Controller
 {
+    use WhatsAppTrait;
     function userOrder(Request $request)
     {
         try {
@@ -180,13 +182,20 @@ class OrderController extends Controller
                     'coupon_id' => $copon->id ?? null,
                     'shope_id' => $shopeId, // Assigning shope_id to the order
                 ]);
+                $shope = User::find($shopeId);
+                $this->sendWhatsapp($shope->phone, $this->purchaseNotification($user->name, $orderId, $subtotal));
                 if ($user->referrer_id) {
+                    $commissionAmount = 2.5;
+                    $userAff = User::find($user->referrer_id);
                     $m = new MarketersReports();
                     $m->money = 0.025 * $subtotal;
-                    $m->percentage = "2.5";
-                    $m->user_id = $user->referrer_id;
+                    $m->percentage = $commissionAmount;
+                    $m->user_id = $userAff->id;
                     $m->order_id = $orderId;
                     $m->save();
+                    // sum money
+                    $marketersReports = MarketersReports::where('user_id', $userAff->id)->sum('money');
+                    $this->sendWhatsapp($user->phone, $this->purchaseThroughCode($userAff->name, $commissionAmount, $marketersReports));
                 }
 
                 // Inserting order items for this merchant
@@ -202,9 +211,7 @@ class OrderController extends Controller
 
 
             // DB::table('order_items')->insert($orderItems);
-            if ($paymentMethod != 'paypal' && $paymentMethod != 'stripe') {
-                CartItem::where('user_id', $userId)->delete();
-            }
+
 
             DB::commit();
             if ($paymentMethod == 'paypal' || $paymentMethod == 'stripe') {
@@ -213,9 +220,11 @@ class OrderController extends Controller
                     'order_id' => $orderId,
                 ]);
             } else {
+                CartItem::where('user_id', $userId)->delete();
                 // sendNotificationToAdmin('اضافة طلبيه', ' قام العميل ' . $user->name . ' بانشاء طلبيه جديده ' . ' معرف الطلبيه ' . $orderId, env("BASE_URL") . "/dashboard/orders/invoice/" . $orderId);
                 // $user->refund -= $orderPrice['check_out']['refound_money'];
                 // $user->save();
+                $this->sendWhatsapp($user->phone, $this->purchaseConfirmation($user->name, $orderId, $subtotal));
                 return response()->json(['message' => __('custom.order_saved_successfully')], 200);
             }
         } catch (\Exception $e) {
@@ -223,8 +232,6 @@ class OrderController extends Controller
             return response()->json(['message' => __('custom.failed_to_retrieve_data'), 'error' => $e->getMessage()], 500);
         }
     }
-
-
     public function uploadMotalpaAffalite(Request $request)
     {
         $total = 0;
@@ -245,8 +252,6 @@ class OrderController extends Controller
 
         return response()->json(['message' => "تم ارسال المطالبه بنجاح"], 200);
     }
-
-
     function Reorder(Request $request)
     {
         try {

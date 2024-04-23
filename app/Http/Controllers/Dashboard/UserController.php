@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Models\History;
 use App\Models\MarketersReports;
+use App\Traits\WhatsAppTrait;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-
+    use WhatsAppTrait;
     public function index(Request $request)
     {
         $userdata = User::whereHas('roles', function ($query) {
@@ -98,6 +99,7 @@ class UserController extends Controller
         $his->money = $request->money;
         $his->user_id = $request->user_id;
         $his->save();
+        $this->sendWhatsapp($user->phone, $this->walletRecharge($user->name, $request->money, $user->wallet));
         session()->flash('Add', 'تم شحن محفظة المستخدم بنجاح');
         return back();
     }
@@ -122,6 +124,8 @@ class UserController extends Controller
         $status = '';
         $userId = $request->input('userId');
         if ($isToggleOnString == "true") {
+
+
             $status = 1;
         } else {
             $status = 0;
@@ -130,7 +134,9 @@ class UserController extends Controller
 
 
         $user = User::find($userId);
-
+        if ($user->type == 'vendor') {
+            $this->sendWhatsapp($user->phone, $this->activateStore($user->name));
+        }
         if ($user) {
             // Update the status field
             $user->status = $status;
@@ -186,18 +192,6 @@ class UserController extends Controller
         session()->flash('Add', 'تم اضافة المستخدم بنجاح');
         return back();
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function show()
-    // {
-    //     $marketers = MarketersReports::all();
-
-    // }
 
 
     public function edit($id)

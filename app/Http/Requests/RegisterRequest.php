@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ValidPhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
@@ -25,7 +26,8 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:100', 'regex:/^[\p{Arabic}\p{L}\s]+$/u'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'email:rfc', 'indisposable'], // 
+            'email' => ['nullable', 'string', 'email'], //, 'max:255', 'unique:users', 'email:rfc', 'indisposable'], // 
+            'phone' => ['required', 'string', 'max:30', new ValidPhoneNumber], // 'unique:users',
             'password' => 'required|string|min:8',
             'type' => 'required|string',
             'invitation_code' => 'nullable|string',

@@ -2,7 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+
 use App\Notifications\AdminMessage;
 use Illuminate\Support\Facades\Notification;
 
@@ -67,11 +67,11 @@ function typeWithdrawer($status)
 function subScribeStatus($status)
 {
     if ($status == 'silver') {
-        return 'فضي';
+        return 'الفضيه';
     } else if ($status == 'golden') {
-        return 'الذهبي';
+        return 'الذهبيه';
     } else {
-        return 'العادي';
+        return 'العاديه';
     }
 }
 function statusToArabic($status)

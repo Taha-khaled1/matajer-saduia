@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ShippingCompanies;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -21,7 +22,7 @@ class UserTableSeeder extends Seeder
                 'name' => 'taha',
                 'type' => 'admin',
                 'status' => 1,
-
+                'phone' => '+201113051656',
                 'isfirst' => 1,
                 'email' => 'tth31770@gmail.com',
                 'created_at' => now(),
@@ -32,6 +33,7 @@ class UserTableSeeder extends Seeder
             [
                 'name' => 'mohamed',
                 'type' => 'vendor',
+                'phone' => '+201113051656',
                 'status' => 1,
                 'isfirst' => 1,
                 'email' => 'vendor@gmail.com',
@@ -54,6 +56,7 @@ class UserTableSeeder extends Seeder
 
             [
                 'name' => 'ahmed Ragaa',
+                'phone' => '+201122911235',
                 'type' => 'user',
                 'status' => 1,
                 'isfirst' => 1,
@@ -63,31 +66,8 @@ class UserTableSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-
-
-            [
-                'name' => 'yousef',
-                'type' => 'user',
-                'status' => 1,
-                'isfirst' => 1,
-                'email' => 'user2@gmail.com',
-                'password' => bcrypt('12345678'),
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'magedy',
-                'type' => 'user',
-                'status' => 1,
-                'isfirst' => 1,
-                'email' => 'user3@gmail.com',
-                'password' => bcrypt('12345678'),
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
         ];
+
 
         $userPermission = [
             'admin',
@@ -200,5 +180,27 @@ class UserTableSeeder extends Seeder
                 $user->assignRole([$roleList[2]]);
             }
         }
+
+
+        $category = new ShippingCompanies();
+        $category->name_ar = "شركة فيجن";
+        $category->cost = "25";
+        $category->user_id = 1;
+        $category->save();
+        $category = new ShippingCompanies();
+        $category->name_ar = "شركة فيجن";
+        $category->cost = "25";
+        $category->user_id = 2;
+        $category->save();
+        $category = new ShippingCompanies();
+        $category->name_ar = "شركة فيجن";
+        $category->cost = "25";
+        $category->user_id = 3;
+        $category->save();
+        $category = new ShippingCompanies();
+        $category->name_ar = "شركة فيجن";
+        $category->cost = "25";
+        $category->user_id = 4;
+        $category->save();
     }
 }

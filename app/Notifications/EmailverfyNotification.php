@@ -24,13 +24,13 @@ class EmailverfyNotification extends Notification
      */
     public function __construct()
     {
-      $this->massge="use the code bellow for verfycation email";
-      $this->fromemail="test@yahao.com";
-      $this->subject="verfycation needed";
-      $this->mailer="smtp";
-      $this->otp=new Otp;
+        $this->massge = "استخدم الكود التالي لتفعيل الحساب";
+        $this->fromemail = "test@yahao.com";
+        $this->subject = "verfycation needed";
+        $this->mailer = "smtp";
+        $this->otp = new Otp;
     }
-    
+
 
     /**
      * Get the notification's delivery channels.
@@ -40,7 +40,7 @@ class EmailverfyNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['phone'];
     }
 
     /**
@@ -50,10 +50,9 @@ class EmailverfyNotification extends Notification
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
-    { 
+    {
         $otp = $this->otp->generate($notifiable->email, 6, 60);
-        return (new MailMessage)->mailer("smtp")->subject($this->subject)->
-        greeting('welcome '.$notifiable->name)->line($this->massge)->line('code : '.$otp->token);
+        return (new MailMessage)->mailer("smtp")->subject($this->subject)->greeting('welcome ' . $notifiable->name)->line($this->massge)->line('code : ' . $otp->token);
     }
 
     /**

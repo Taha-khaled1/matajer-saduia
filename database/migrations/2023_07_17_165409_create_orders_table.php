@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('status', ['pending', 'processing', 'delivering', 'completed', 'cancelled', 'refunded', 'shipped'])->default('pending');
+            $table->enum('status', ['pending', 'processing', 'delivering', 'completed', 'cancelled', 'refunded', 'shipped', 'bill_lading'])->default('pending');
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
             $table->enum('payment_method', ['cash_on_delivery', 'stripe', 'paypal', 'tap'])->default('cash_on_delivery'); // stripe or paypal or cash_on_delivery
             $table->string('currency')->nullable()->default('aed');
@@ -24,6 +24,9 @@ return new class extends Migration
             $table->boolean('cancelled')->default(false);
             $table->boolean('isrefund')->default(false);
             $table->float('refound_money')->default(0);
+            // delivery number
+            $table->string('delivery_number')->nullable();
+            $table->string('bill_lading_number')->nullable();
             // shipping_cost // مجموع سعر اوزان كل المنتجات
             $table->float('tax')->default(0);
             $table->float('shipping')->default(0);

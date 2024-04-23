@@ -4,17 +4,20 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Traits\AuthTrait;
 use App\Http\Controllers\Controller;
-
+use App\Models\User;
 use App\Notifications\EmailverfyNotification;
+use App\Rules\ValidPhoneNumber;
+use App\Traits\WhatsAppTrait;
 use Ichtrojan\Otp\Otp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class EmailVerificationController extends Controller
 {
-    use AuthTrait;
+
+    use AuthTrait, WhatsAppTrait;
     public $otp;
-   
+
     public function __construct()
     {
         // $this->middleware('auth'); // Ensure user is authenticated
@@ -25,14 +28,17 @@ class EmailVerificationController extends Controller
 
     public function sendEmailverfyc(Request $request)
     {
-        $email = $this->validateEmail($request->email);
-        $user = $this->getUserByemail($email);
+        $request->validate([
+            'phone' => ['required', 'string', 'max:30', new ValidPhoneNumber], //
+        ]);
+
+        $inpout = $request->only('phone');
+        $user = User::where('phone', $inpout)->first();
 
         if (!$user) {
             return response()->json(['message' => __('custom.user_not_found'),], 404);
         }
-
-        $user->notify(new EmailverfyNotification());
+        $this->sendOtpPhone($user);
         return response()->json(['message' => 'Success', 'status_code' => 200,], 200);
     }
 
@@ -41,30 +47,30 @@ class EmailVerificationController extends Controller
         $email = $this->validateEmail($request->email);
         $otp2 = $this->otp->validate($email, $request->otp);
         if (!$otp2->status) {
-            return response()->json(['message' => __('custom.email_verification_error'),'status_code' => 404], 404);
+            return response()->json(['message' => __('custom.email_verification_error'), 'status_code' => 404], 404);
         }
-        $user = $this->getUserByemail($email); 
+        $user = $this->getUserByemail($email);
         $token = $user->createToken('Laravel Sanctum')->plainTextToken;
         return response()->json(['token' => $token, 'message' => 'Success', 'status_code' => 200], 200);
     }
 
     public function verifyEmail(Request $request)
     {
-        $email = $this->validateEmail($request->email);
+        $request->validate([
+            'phone' => ['required', 'string', 'max:30', new ValidPhoneNumber], //
+        ]);
 
-       
-        
-        $otp2 = $this->otp->validate($email, $request->otp);
-        
+        $otp2 = $this->otp->validate($request->phone, $request->otp);
+
         if (!$otp2->status) {
-            return response()->json(['message' =>__('custom.email_verification_error'),'status_code' => 404], 404);
+            return response()->json(['message' => __('custom.email_verification_error'), 'status_code' => 404], 404);
         }
-        $user = $this->getUserByemail($email); 
-        // OTP is correct, continue with email verification
+        $user = $this->getUserByPhone($request->phone);
         $user->email_verified_at = now();
         $user->save();
+        $token = $user->createToken('Laravel Sanctum')->plainTextToken;
 
-        return response()->json(['message' => 'Success', 'status_code' => 200], 200);
+        return response()->json(['message' => 'Success', 'token' => $token, 'user' => $user, 'status_code' => 200], 200);
     }
 }
 //  'token' => $hashedToken,     $hashedToken = Hash::make($token);

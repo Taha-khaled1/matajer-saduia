@@ -10,10 +10,12 @@ use App\Models\BranchCompany;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\Withdrawal;
+use App\Traits\WhatsAppTrait;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+    use WhatsAppTrait;
     function __construct()
     {
 
@@ -78,8 +80,21 @@ class OrderController extends Controller
     public function changePaymentStatus(Request $request)
     {
         $order = Order::find($request->id);
+        $user = User::find($order->user_id);
+        $shope = User::find($order->shope_id);
         $order->payment_status = $request->payment_status;
         $order->save();
+        if ($request->payment_status == "shipped") {
+            $this->sendWhatsapp($user->phone, $this->orderShipping($user->name, $order->id, $order->delivery_number ?? $order->id));
+            $this->sendWhatsapp($user->phone, $this->orderShipped($shope->name, $order->id));
+        } elseif ($request->payment_status == "delivering") {
+            $this->sendWhatsapp($user->phone, $this->orderDelivery($user->name, $order->id, $order->delivery_number ?? $order->id));
+        } elseif ($request->payment_status == "completed") {
+            $this->sendWhatsapp($user->phone, $this->returnShippingPolicyIssuedForCustomer($user->name, $order->id, $order->delivery_number ?? $order->id));
+            $this->sendWhatsapp($user->phone, $this->orderDelivered($shope->name, $order->id));
+        } elseif ($request->payment_status == "bill_lading") {
+            $this->sendWhatsapp($user->phone, $this->shippingPolicyIssued($shope->name, $order->bill_lading_number ?? $order->delivery_number ?? $order->id, $order->id));
+        }
         session()->flash('Add', 'تم تعديل حالة الدفع بنجاح');
         return back();
     }

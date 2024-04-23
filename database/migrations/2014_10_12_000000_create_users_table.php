@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('invitation_code')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('cash_on_delivery')->default(true);
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

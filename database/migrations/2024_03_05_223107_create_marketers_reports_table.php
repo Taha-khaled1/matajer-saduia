@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('marketers_reports', function (Blueprint $table) {
             $table->id();
-            $table->string("money");
+            $table->float("money", 8, 2);
             $table->enum("status", ['procedure', 'sold', 'charge', 'return'])->default("procedure"); //procedure sold 
             $table->string("percentage"); // 
             $table->unsignedBigInteger('user_id');

@@ -14,19 +14,28 @@ use App\Models\Advertisement;
 use App\Models\Order;
 use App\Models\ShippingCompanies;
 use App\Models\User;
-use App\Notifications\EmailverfyNotification;
+use App\Traits\AuthTrait;
+use Ichtrojan\Otp\Otp;
+use App\Traits\WhatsAppTrait;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 // __('custom.')
 class AuthController extends Controller
 {
-    use Notifiable;
+    use Notifiable, WhatsAppTrait, AuthTrait;
     private $auth;
+    public $otp;
 
+    public function __construct()
+    {
+        // $this->middleware('auth'); // Ensure user is authenticated
+        $this->otp = new Otp;
+    }
     public function login(LoginRequest $request)
     {
-        $credentials = $request->only(['email', 'password']);
+
+        $credentials = $request->only(['phone', 'password']);
 
         if (!Auth::attempt($credentials)) {
             throw new \Illuminate\Auth\AuthenticationException(__('custom.authentication_failed'));
@@ -40,7 +49,11 @@ class AuthController extends Controller
         if ($user->status == '0') {
             throw new \Illuminate\Auth\AuthenticationException(__('custom.user_blocked'));
         }
-
+        $otp2 = $this->otp->validate($request->phone, $request->otp);
+        if (!$otp2->status) {
+            return response()->json(['message' => "يوجد مشكله في التحققك من رقم هاتفك", 'status_code' => 404], 404);
+        }
+        $this->sendWhatsapp($user->phone, $this->successfulLogin($user->name));
         $token = $user->createToken('authToken')->plainTextToken;
         $user->fcm = $request->fcm ?? "test";
         $user->save();
@@ -103,8 +116,7 @@ class AuthController extends Controller
         }
 
         $user = $this->createUser($request->validated(), $request['referrer_id']);
-
-        SendVerificationEmailJob::dispatch($user);
+        $this->sendOtpPhone($user);
 
         $token = $user->createToken('Laravel Sanctum')->plainTextToken;
 
@@ -115,6 +127,13 @@ class AuthController extends Controller
             $category->cost = "25";
             $category->user_id = $user->id;
             $category->save();
+        }
+        if ($user->type == 'vendor') {
+            $this->sendWhatsapp($user->phone, $this->registerStore($user->name, 'الباقه العاديه'));
+        } elseif ($user->type == 'affiliate') {
+            $this->sendWhatsapp($user->phone, $this->registerAffiliate($user->name, $user->invitation_code));
+        } else {
+            $this->sendWhatsapp($user->phone, $this->successfulRegistration($user->name));
         }
         return response()->json(['token' => $token, 'message' => 'Success', 'status_code' => 200], 200);
     }
@@ -173,6 +192,7 @@ class AuthController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone' => $data['phone'],
             'type' => $data['type'],
             'referrer_id' => $referrer_id,
             'fcm' => $data['fcm'] ?? "test",

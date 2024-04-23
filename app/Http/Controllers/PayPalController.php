@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\User;
+use App\Traits\WhatsAppTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Nafezly\Payments\Classes\TapPayment;
 
 class PayPalController extends Controller
 {
+    use WhatsAppTrait;
 
     public function payWithTap(Request $request)
     {
@@ -69,6 +71,7 @@ class PayPalController extends Controller
                 $user->subscription = $lastName;
                 $user->subscription_at = now();
                 $user->save();
+                $this->sendWhatsapp($user->phone, $this->upgradePackage($user->name, subScribeStatus($lastName) . 'الباقه', now()->addDays(30)));
             }
             return response()->json("Payment completed successfully");
         }
