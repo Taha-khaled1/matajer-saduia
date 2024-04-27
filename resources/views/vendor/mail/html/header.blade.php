@@ -4,7 +4,7 @@
         <a href="{{ $url }}" style="display: inline-block;">
             @if (trim($slot) === 'Laravel')
                 <img src="https://wealthest22.com/khymat-zaman-back/public/imagesfp/setting/a.png" class="logo"
-                    alt="khaymat Logo">
+                    alt="matajer-saduia Logo">
             @else
                 {{ $slot }}
             @endif

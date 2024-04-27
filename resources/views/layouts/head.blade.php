@@ -1,5 +1,5 @@
 <!-- Title -->
-<title> Khaymat - Zaman </title>
+<title> matajer-saduia</title>
 <!-- Favicon -->
 <link rel="icon" href="{{ URL::asset('assets/img/brand/favicon.png') }}" type="image/x-icon" />
 <!-- Icons css -->

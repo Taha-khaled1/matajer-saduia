@@ -107,4 +107,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Order::class, 'shope_id');
     }
+
+    public function addressesCompany()
+    {
+        return $this->hasMany(BranchCompany::class);
+    }
+    public function defaultAddressCompany()
+    {
+        return $this->hasOne(BranchCompany::class)->where('status', true);
+    }
 }

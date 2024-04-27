@@ -90,10 +90,6 @@
                         <div>
                             <a class="modal-effect btn btn-outline-primary d-inline-block" data-effect="effect-scale"
                                 data-toggle="modal" href="#modaldemo8">اضافة اعلان</a>
-
-                            {{-- <a class="modal-effect btn btn-outline-primary d-inline-block mr-2" style="width: 300px;"
-                                data-effect="effect-scale" data-toggle="modal" href="#exampleModal0">ارسال اشعار لجميع
-                                المستخدمين</a> --}}
                         </div>
                     </div>
                 </div>

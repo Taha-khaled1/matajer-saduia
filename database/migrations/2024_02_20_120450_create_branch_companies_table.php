@@ -20,12 +20,18 @@ return new class extends Migration
             $table->integer("arrange")->default(0);
             $table->string("country")->nullable();
             $table->string("city")->nullable();
-            // $table->string("name_ar");
             $table->string("description_en")->nullable();
             $table->string("description_ar")->nullable();
-            $table->boolean('status')->default(true);
-
+            $table->string("phone")->nullable();
+            $table->string("street")->nullable();
+            $table->string("zip")->nullable();
+            $table->string("region")->nullable();
+            $table->boolean('status')->default(false);
             $table->string("adress")->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

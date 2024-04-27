@@ -830,7 +830,7 @@ $enddata=$product->discount_end ?? date('Y-m-d H:i:s') ; @endphp
                                                         data-default-file="{{ URL::asset($product->image) }}"
                                                         data-height="200" name="image" enctype="multipart/form-data" />
                                                 </div>
-                                                <div class="col-sm-12 col-md-4">
+                                                {{-- <div class="col-sm-12 col-md-4">
                                                     <label for="measurement_guide" class="col-form-label">دليل القياس
                                                         (اختياري)</label>
                                                     <input type="file" class="dropify"
@@ -842,7 +842,7 @@ $enddata=$product->discount_end ?? date('Y-m-d H:i:s') ; @endphp
                                                 <div class="col-sm-12 col-md-4" style="margin-top: 35px;">
                                                     <textarea class="form-control" placeholder="اضافة ملحوظه لدليل القياس" rows="3"
                                                         name="description_measurement_guide"> {{ $product->description_measurement_guide }} </textarea>
-                                                </div>
+                                                </div> --}}
                                             </div>
 
 

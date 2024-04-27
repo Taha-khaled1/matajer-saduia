@@ -6,8 +6,10 @@ use App\Models\BranchCompany;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Traits\ImageProcessing;
+use Illuminate\Support\Facades\Auth;
 
 class BranchCompanyController extends Controller
 {
@@ -41,22 +43,29 @@ class BranchCompanyController extends Controller
             'name_ar' => 'required|max:100',
             'country' => 'required|max:100',
             'city' => 'required|max:100',
-            'description_ar' => 'required|max:100',
-            'arrange' => 'integer',
+            'adress' => 'required|max:100',
+            'phone' => 'required|max:100',
+            'street' => 'required|max:100',
+            'zip' => 'required|max:100',
+            'region' => 'required|max:100',
+
         ]);
 
         if ($validator->fails()) {
             session()->flash('delete', 'لم يتم حفظ فرع الشركه بسبب مشكله ما');
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        $existingBranchesCount = BranchCompany::count();
 
-        $category = new BranchCompany;
-        $category->country = $request->input('country');
-        $category->name_ar = $request->input('name_ar');
-        $category->city =  $request->city;
-        $category->description_ar =  $request->description_ar;
-        $category->arrange = $request->input('arrange', 1);
-        $category->save();
+        // If this is the first branch, set it as default
+        $data = $validator->validate();
+        if ($existingBranchesCount == 0) {
+            $data['status'] = true;
+        }
+        $data['user_id'] = Auth::user()->id;
+        $b = BranchCompany::create($data);
+
+
         session()->flash('Add', 'تم اضافة فرع الشركه بنجاح ');
 
         return redirect()->route('branch_companies.index')->with('success', 'Category created successfully');
@@ -87,54 +96,27 @@ class BranchCompanyController extends Controller
 
         return response()->json(['success' => false, 'message' => 'category not found']);
     }
-    public function show($id)
-    {
-        //
-    }
-
-
-    public function edit($id)
-    {
-        //
-    }
 
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name_en' => 'required|max:100|unique:categories,name_en,' . $request->id . ',id',
-            'name_ar' => 'required|max:100|unique:categories,name_ar,' . $request->id . ',id',
-            'image' => 'nullable|image',
-            'status' => 'boolean',
-            'arrange' => 'integer',
-        ], [
-            'name_en.required' => 'يرجى إدخال اسم الفئة باللغة الإنجليزية',
-            'name_en.max' => 'يجب أن يكون طول اسم الفئة باللغة الإنجليزية حتى 100 حرف',
-            'name_en.unique' => 'اسم الفئة باللغة الإنجليزية مسجل بالفعل',
-            'name_ar.required' => 'يرجى إدخال اسم الفئة باللغة العربية',
-            'name_ar.max' => 'يجب أن يكون طول اسم الفئة باللغة العربية حتى 100 حرف',
-            'name_ar.unique' => 'اسم الفئة باللغة العربية مسجل بالفعل',
-            'image.image' => 'يجب أن تكون الصورة من نوع صورة',
-            'status.boolean' => 'حالة الفئة يجب أن تكون صحيحة أو خاطئة',
-            'arrange.integer' => 'الترتيب يجب أن يكون عددًا صحيحًا',
+            'name_ar' => 'sometimes|max:100',
+            'country' => 'sometimes|max:100',
+            'city' => 'sometimes|max:100',
+            'description_ar' => 'sometimes|max:100',
+            'phone' => 'sometimes|max:100',
+            'street' => 'sometimes|max:100',
+            'zip' => 'sometimes|max:100',
+            'region' => 'sometimes|max:100',
+
         ]);
 
-
         if ($validator->fails()) {
+            session()->flash('delete', 'لم يتم حفظ فرع الشركه بسبب مشكله ما');
             return redirect()->back()->withErrors($validator)->withInput();
         }
         $category = BranchCompany::findOrFail($request->id);
-
         $data = $request->except(['_token', '_method']);
-
-        if ($request->hasFile('image')) {
-            // Delete the existing image
-            $this->deleteImage($category->image);
-
-            // Save the new image
-            $data['image'] =  $this->saveImage($request->file('image'), 'category');
-            $data['image'] = 'imagesfp/category/' . $data['image'];
-        }
-
         $category->update($data);
         session()->flash('Add', 'تم تحديث بيانات فرع الشركه بنجاح ');
         return redirect()->route('branch_companies.index')->with('success', 'Category updated successfully');
@@ -151,5 +133,23 @@ class BranchCompanyController extends Controller
         $category->delete();
         session()->flash('delete', 'تم حذف فرع الشركه ');
         return redirect()->route('branch_companies.index')->with('success', 'Category deleted successfully');
+    }
+
+    public function setDefaultAddress(Request $request)
+    {
+
+        $user = User::find(Auth::user()->id); // Auth::user();
+        $address = BranchCompany::findOrFail($request->addressId);
+
+        // Unset default flag for previous default address, if exists
+        $user->addressesCompany()->where('status', true)->update(['status' => false]);
+
+        // Set the new default address
+        $address->status = true;
+        $address->save();
+
+        session()->flash('Add', 'تم تحديث بيانات نقطة الاستلام بنجاح ');
+
+        return redirect()->route('branch_companies.index')->with('success', 'Category created successfully');
     }
 }

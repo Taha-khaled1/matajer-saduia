@@ -63,15 +63,15 @@ class ShippingCompaniesController extends Controller
 
     public function update(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name_ar' => 'required|max:100|unique:shipping_companies,name_ar,' . $request->id . ',id',
+        // $validator = Validator::make($request->all(), [
+        //     'name_ar' => 'required|max:100|unique:shipping_companies,name_ar,' . $request->id . ',id',
 
-        ],);
+        // ],);
 
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+        // if ($validator->fails()) {
+        //     return redirect()->back()->withErrors($validator)->withInput();
+        // }
         $category = ShippingCompanies::findOrFail($request->id);
 
         $data = $request->except(['_token', '_method']);

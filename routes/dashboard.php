@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth']], function () {
     })->middleware('vendorshop');
 
     Route::post('/branch_companies/update-status', [BranchCompanyController::class, 'updateStatusCatogery'])->name('branch_companies.update-status');
+    Route::get('/branch/companies/setDefaultAddress', [BranchCompanyController::class, 'setDefaultAddress'])->name('branch.companies.setDefaultAddress');
 
     Route::get('/orders-statistics', [DashboardController::class, 'getStatistics']);
 

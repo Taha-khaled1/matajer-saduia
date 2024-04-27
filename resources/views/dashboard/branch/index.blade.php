@@ -9,6 +9,27 @@
     <link href="{{ URL::asset('assets/plugins/datatable/css/responsive.dataTables.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
     <style>
+        .status-cell {
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ccc;
+        }
+
+        .default-status {
+            background-color: #c9e2b3;
+            /* خلفية خضراء */
+            color: #006600;
+            /* لون نص أخضر داكن */
+        }
+
+        .non-default-status {
+            background-color: #f4cccc;
+            /* خلفية حمراء */
+            color: #cc0000;
+            /* لون نص أحمر داكن */
+        }
+
         /* CSS for image container */
         .image-container {
             width: 50px;
@@ -98,10 +119,11 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">رقم نقطة الاستلام</th>
                                     <th class="wd-15p border-bottom-0">اسم نقطة الاستلام</th>
-                                    <th class="wd-15p border-bottom-0">الدوله</th>
-                                    <th class="wd-15p border-bottom-0">المدينه</th>
-                                    <th class="wd-20p border-bottom-0">العنوان</th>
-                                    <th class="wd-20p border-bottom-0">العمليات</th>
+                                    <th class="wd-8p border-bottom-0">الدوله</th>
+                                    <th class="wd-8p border-bottom-0">المدينه</th>
+                                    <th class="wd-15p border-bottom-0">العنوان</th>
+                                    <th class="wd-8p border-bottom-0">الحاله</th>
+                                    <th class="wd-15p border-bottom-0">العمليات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -121,157 +143,215 @@
                                         <td>{{ $branch->name_ar }}</td>
                                         <td>{{ $branch->country }}</td>
                                         <td>{{ $branch->city }}</td>
-                                        <td>{{ $branch->description_ar }}</td>
-                                        {{-- <td>{{ $branch->created_at }}</td> --}}
-                                        <td>
-                                            <div class="d-flex">
-
-
-
-                                                <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
-                                                    data-id="{{ $branch->id }}" data-name="{{ $branch->name_ar }}"
-                                                    data-toggle="modal" href="#modaldemo9" title="حذف"><i
-                                                        class="las la-trash"></i></a>
-                                            </div>
-
+                                        <td>{{ $branch->adress }}</td>
+                                        <td
+                                            class="status-cell {{ $branch->status ? 'default-status' : 'non-default-status' }}">
+                                            {{ $branch->status ? 'افتراضي' : 'محدد' }}
                                         </td>
-                                    </tr>
-                                @endforeach
+                                        <td>
+                                            <button class="btn btn-outline-primary text-nowrap btn-sm ml-2"
+                                                onclick="window.location.href='{{ route('branch.companies.setDefaultAddress', ['addressId' => $branch->id]) }}'">
+                                                جعله افتراضي </button>
 
+                                            <a class="modal-effect btn btn-sm btn-info btn-sm ml-2"
+                                                data-effect="effect-scale" data-id="{{ $branch->id }}"
+                                                data-name_ar="{{ $branch->name_ar }}"
+                                                data-description="{{ $branch->description_ar }}"data-street="{{ $branch->street }}"
+                                                data-country="{{ $branch->country }}" data-city="{{ $branch->city }}"
+                                                data-phone="{{ $branch->phone }}"data-region="{{ $branch->region }}"
+                                                data-zip="{{ $branch->zip }}"data-adress="{{ $branch->adress }}"
+                                                data-toggle="modal" href="#exampleModal2" title="تعديل"><i
+                                                    class="las la-pen">
 
+                                                </i>
+                                            </a>
 
-                            </tbody>
-                        </table>
+                                            <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
+                                                data-id="{{ $branch->id }}" data-name="{{ $branch->name_ar }}"
+                                                data-toggle="modal" href="#modaldemo9" title="حذف"><i
+                                                    class="las la-trash"></i></a>
                     </div>
+
+                    </td>
+                    </tr>
+                    @endforeach
+
+
+
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modaldemo8">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header">
+                    <h6 class="modal-title">اضافة نقطة الاستلام</h6><button aria-label="Close" class="close"
+                        data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('branch_companies.store') }}" method="post" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">اسم نقطة الاستلام </label>
+                            <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">الدوله</label>
+                            <input type="text" class="form-control" id="country" name="country" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">المدينه</label>
+                            <input type="text" class="form-control" id="city" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">العنوان</label>
+                            <input type="text" class="form-control" id="adress" name="adress" required>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">رقم الهاتف</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" required>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">الشارع</label>
+                                    <input type="text" class="form-control" id="street" name="street" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">المنطقة</label>
+                                    <input type="text" class="form-control" id="region" name="region" required>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">الرمز البريدي</label>
+                                    <input type="text" class="form-control" id="zip" name="zip" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">تاكيد</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
-        <div class="modal" id="modaldemo8">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content modal-content-demo">
-                    <div class="modal-header">
-                        <h6 class="modal-title">اضافة نقطة الاستلام</h6><button aria-label="Close" class="close"
-                            data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ route('branch_companies.store') }}" method="post" enctype="multipart/form-data">
-                            {{ csrf_field() }}
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">اسم نقطة الاستلام باللغه العربيه</label>
-                                <input type="text" class="form-control" id="name_ar" name="name_ar" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">الدوله</label>
-                                <input type="text" class="form-control" id="country" name="country" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">المدينه</label>
-                                <input type="text" class="form-control" id="city" name="city">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">العنوان</label>
-                                <input type="text" class="form-control" id="s" name="description_ar">
-                            </div>
-
-
-
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-success">تاكيد</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                            </div>
-                        </form>
-                    </div>
+    </div>
+    <!-- row closed -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">تعديل نقطة الاستلام</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <div class="modal-body">
+                    <form action="{{ route('branch_companies.update', 0) }}" method="post"
+                        enctype="multipart/form-data">
+                        {{ method_field('PUT') }}
+                        {{ csrf_field() }}
+                        <input type="hidden" name="id" id="id" value="">
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">اسم نقطة الاستلام</label>
+                            <input type="text" class="form-control" id="name_ar" name="name_ar" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">الدوله</label>
+                            <input type="text" class="form-control" id="country" name="country" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">المدينه</label>
+                            <input type="text" class="form-control" id="city" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">العنوان</label>
+                            <input type="text" class="form-control" id="adress" name="adress" required>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">رقم الهاتف</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" required>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">الشارع</label>
+                                    <input type="text" class="form-control" id="street" name="street" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">المنطقة</label>
+                                    <input type="text" class="form-control" id="region" name="region" required>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">الرمز البريدي</label>
+                                    <input type="text" class="form-control" id="zip" name="zip" required>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">تاكيد</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+                </div>
+                </form>
             </div>
-
         </div>
-        <!-- row closed -->
-        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">تعديل نقطة الاستلام</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
+    </div>
+
+    <!-- delete -->
+    <div class="modal" id="modaldemo9">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header">
+                    <h6 class="modal-title">حذف نقطة الاستلام</h6>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('branch_companies.destroy', 0) }}" method="post">
+                    {{ method_field('DELETE') }}
+                    {{ csrf_field() }}
                     <div class="modal-body">
-                        <form action="{{ route('branch_companies.update', 0) }}" method="post"
-                            enctype="multipart/form-data">
-                            {{ method_field('PUT') }}
-                            {{ csrf_field() }}
-                            <input type="hidden" name="id" id="id" value="">
-
-                            {{-- <input type="hidden" name="status" id="status" value=""> --}}
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">اسم نقطة الاستلام باللغه العربيه</label>
-                                <input type="text" class="form-control" id="name_ar" name="name_ar" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">اسم نقطة الاستلام باللغه الانجليزيه</label>
-                                <input type="text" class="form-control" id="name_en" name="name_en" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">ترتيب نقطة الاستلام </label>
-                                <input type="number" class="form-control" id="arrange" name="arrange" required>
-                            </div>
-                            {{-- <div class="form-group">
-                                <p class="mg-b-10">ظهور في الصفحه الرئيسيه</p>
-                                <select id="is_home" name="is_home" class="form-control SlectBox">
-                                    <option value="true" @if (isset($is_home) && $is_home == true) selected @endif>اظهار داخل
-                                        الصفحه الرئيسيه</option>
-                                    <option value="false" @if (isset($is_home) && $is_home != true) selected @endif>الاخفاء من
-                                        الصفحه الرئيسيه</option>
-                                </select>
-                            </div> --}}
-                            <div class="form-group">
-                                <label for="recipient-name" class="col-form-label">صوره نقطة الاستلام</label>
-                                <input class="form-control" name="image" id="image" type="file"
-                                    onchange="displaySelectedImage(event)">
-                                <img src="image" id="preview-image" class="img-thumbnail"
-                                    style="width: 100px; height: 100px;">
-                            </div>
-
+                        <p>هل أنت متأكد من عملية الحذف؟</p><br>
+                        <input type="hidden" name="id" id="id" value="">
+                        <input class="form-control" name="name" id="name" type="text" readonly>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">تاكيد</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
+                        <button type="submit" class="btn btn-danger">تأكيد</button>
                     </div>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
-
-        <!-- delete -->
-        <div class="modal" id="modaldemo9">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content modal-content-demo">
-                    <div class="modal-header">
-                        <h6 class="modal-title">حذف نقطة الاستلام</h6>
-                        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form action="{{ route('branch_companies.destroy', 0) }}" method="post">
-                        {{ method_field('DELETE') }}
-                        {{ csrf_field() }}
-                        <div class="modal-body">
-                            <p>هل أنت متأكد من عملية الحذف؟</p><br>
-                            <input type="hidden" name="id" id="id" value="">
-                            <input class="form-control" name="name" id="name" type="text" readonly>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
-                            <button type="submit" class="btn btn-danger">تأكيد</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    </div>
 
 
     </div>
@@ -313,11 +393,6 @@
         })
     </script>
 
-
-
-
-
-
     <script>
         $(document).ready(function() {
             $('.main-toggle').on('click', function() {
@@ -353,8 +428,6 @@
             });
         });
     </script>
-
-
 
     <script>
         document.querySelector("#image").addEventListener("change", function() {
@@ -404,24 +477,26 @@
                 var button = $(event.relatedTarget)
                 var id = button.data('id')
                 var name_ar = button.data('name_ar')
-                var name_en = button.data('name_en')
-                var arrange = button.data('arrange')
-                var is_home = button.data('is_home')
-                var status = button.data('status')
-                var image = button.data('image')
+                var city = button.data('city')
+                var description_ar = button.data('description_ar')
+                var phone = button.data('phone')
+                var street = button.data('street')
+                var zip = button.data('zip')
+                var adress = button.data('adress')
+                var country = button.data('country')
+                var region = button.data('region')
                 var modal = $(this)
                 modal.find('.modal-body #id').val(id)
-                modal.find('.modal-body #name_ar').val(name_ar)
-                modal.find('.modal-body #is_home option').each(function() {
-                    if ($(this).val() == is_home) {
-                        $(this).prop('selected', true);
-                    }
-                });
-
-                modal.find('.modal-body #preview-image').attr('src', appUrl + "/" + image)
-                modal.find('.modal-body #name_en').val(name_en)
-                modal.find('.modal-body #arrange').val(arrange)
                 modal.find('.modal-body #status').val(status)
+                modal.find('.modal-body #name_ar').val(name_ar)
+                modal.find('.modal-body #city').val(city)
+                modal.find('.modal-body #description_ar').val(description_ar)
+                modal.find('.modal-body #phone').val(phone)
+                modal.find('.modal-body #street').val(street)
+                modal.find('.modal-body #zip').val(zip)
+                modal.find('.modal-body #adress').val(adress)
+                modal.find('.modal-body #country').val(country)
+                modal.find('.modal-body #region').val(region)
             })
         });
     </script>

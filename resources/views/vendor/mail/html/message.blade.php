@@ -2,7 +2,7 @@
     {{-- Header --}}
     <x-slot:header>
         <x-mail::header :url="config('app.url')">
-            khaymat
+            matajer-saduia
         </x-mail::header>
     </x-slot:header>
 
@@ -21,7 +21,7 @@
     {{-- Footer --}}
     <x-slot:footer>
         <x-mail::footer>
-            © {{ date('Y') }} khaymat. @lang('All rights reserved.')
+            © {{ date('Y') }} matajer-saduia. @lang('All rights reserved.')
         </x-mail::footer>
     </x-slot:footer>
 </x-mail::layout>

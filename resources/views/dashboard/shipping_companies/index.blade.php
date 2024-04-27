@@ -214,10 +214,10 @@
 
 
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="exampleInputEmail1">اسم شركة الشحن باللغه العربيه</label>
                                 <input type="text" class="form-control" id="name_ar" name="name_ar" required>
-                            </div>
+                            </div> --}}
                             <div class="form-group">
                                 <label for="exampleInputEmail1">تكلفة السحن</label>
                                 <input type="number" class="form-control" id="cost" name="cost" required>
