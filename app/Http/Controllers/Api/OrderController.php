@@ -86,7 +86,7 @@ class OrderController extends Controller
             $reviews = UserReview::with('user')->where('vendor_id', $order->shope_id)->get();
             $averageRating = UserReview::where('vendor_id', $order->shope_id)->avg('rating');
             return response()->json([
-                'averageRating' => $averageRating,
+                'averageRating' => $averageRating ?? 0.0,
                 'status_code' => 200,
                 'message' => 'Success',
                 'reviews' =>  $reviews,

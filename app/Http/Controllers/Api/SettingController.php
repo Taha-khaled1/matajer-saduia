@@ -46,10 +46,10 @@ class SettingController extends Controller
         $reviews = UserReview::with('user')->where('vendor_id', $merchantId)->get();
 
         return response()->json([
-            'totalProducts' => $totalProducts,
-            'totalSales' => $totalSales,
+            'totalProducts' => $totalProducts ?? 0.0,
+            'totalSales' => $totalSales ?? 0.0,
             'reviews' => $reviews,
-            'averageRating' => $averageRating,
+            'averageRating' => $averageRating ?? 0.0,
             'totalRevenue' => $totalRevenue,
             'shop' => $setting,
             'products' => $products,
