@@ -12,33 +12,45 @@ trait WhatsAppTrait
     {
 
         try {
-            $client = new Client([
-                'headers' => [
-                    'Authorization' => 'Bearer ' . env('LETS_BOT_TOKEN'),
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ]
+
+            // function sendOtpWhatsApp($body, $recieveNumber = "+201113051656")
+            // {
+
+            $response = Http::post('https://api.ultramsg.com/instance64835/messages/chat', [
+                'token' => '1jeqxe85deo79r2a',
+                'to' => $phone,
+                'body' => $message
             ]);
 
-            $response = $client->post('https://letsbot.net/api/v1/message/send', [
-                'json' => [
-                    'phone' => $phone, // Replace this with the correct phone number
-                    'body' => $message,
-                ],
-            ]);
+            return true;
 
-            $body = $response->getBody()->getContents();
-            $data = json_decode($body, true); // Decode the JSON response
+            // $client = new Client([
+            //     'headers' => [
+            //         'Authorization' => 'Bearer ' . env('LETS_BOT_TOKEN'),
+            //         'Content-Type' => 'application/json',
+            //         'Accept' => 'application/json',
+            //     ]
+            // ]);
 
-            $message = $data['Message'];
-            if ($data == true) {
-                $key = $data['data']['key'];
-                $remoteJid = $key['remoteJid'];
-                $messageId = $key['id'];
-                return true;
-            } else {
-                return false;
-            }
+            // $response = $client->post('https://letsbot.net/api/v1/message/send', [
+            //     'json' => [
+            //         'phone' => $phone, // Replace this with the correct phone number
+            //         'body' => $message,
+            //     ],
+            // ]);
+
+            // $body = $response->getBody()->getContents();
+            // $data = json_decode($body, true); // Decode the JSON response
+
+            // $message = $data['Message'];
+            // if ($data == true) {
+            //     $key = $data['data']['key'];
+            //     $remoteJid = $key['remoteJid'];
+            //     $messageId = $key['id'];
+            //     return true;
+            // } else {
+            //     return false;
+            // }
         } catch (\Throwable $th) {
 
             return false;
