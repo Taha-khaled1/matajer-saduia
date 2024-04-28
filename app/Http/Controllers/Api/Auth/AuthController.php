@@ -115,12 +115,16 @@ class AuthController extends Controller
             }
         }
 
+
+        $otp2 = $this->otp->validate($request->phone, $request->otp);
+        if (!$otp2->status) {
+            return response()->json(['message' => "يوجد مشكله في التحققك من رقم هاتفك", 'status_code' => 404], 404);
+        }
         $user = $this->createUser($request->validated(), $request['referrer_id']);
-        $this->sendOtpPhone($user);
-
         $token = $user->createToken('Laravel Sanctum')->plainTextToken;
-
         $user->assignRole([$request->type ?? "user"]);
+        $user->email_verified_at = now();
+        $user->save();
         if ($request->type == "vendor") {
             $category = new ShippingCompanies;
             $category->name_ar = "شركة فيجن";
@@ -135,7 +139,7 @@ class AuthController extends Controller
         } else {
             $this->sendWhatsapp($user->phone, $this->successfulRegistration($user->name));
         }
-        return response()->json(['token' => $token, 'message' => 'Success', 'status_code' => 200], 200);
+        return response()->json(['token' => $token, 'user' => $user, 'message' => 'Success', 'status_code' => 200], 200);
     }
 
 

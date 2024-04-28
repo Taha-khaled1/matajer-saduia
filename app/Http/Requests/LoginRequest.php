@@ -15,6 +15,8 @@ class LoginRequest extends FormRequest
             // 'email' => ['required', 'string', 'email', 'max:255',  'email:rfc,dns','indisposable'],
             'password' => 'required|string|min:8',
             'fcm' => 'nullable|string',
+            'otp' => 'required|string|max:6|min:6',
+
         ];
     }
 }

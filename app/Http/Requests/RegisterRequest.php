@@ -31,6 +31,7 @@ class RegisterRequest extends FormRequest
             'password' => 'required|string|min:8',
             'type' => 'required|string',
             'invitation_code' => 'nullable|string',
+            'otp' => 'required|string|max:6|min:6',
 
         ];
     }
