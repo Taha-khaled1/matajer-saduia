@@ -32,13 +32,15 @@ class EmailVerificationController extends Controller
             'phone' => ['required', 'string', 'max:30', new ValidPhoneNumber], //
         ]);
 
-        $inpout = $request->only('phone');
-        $user = User::where('phone', $inpout)->first();
+        $inpout = $request->phone;
+        // $user = User::where('phone', $inpout)->first();
 
-        if (!$user) {
-            return response()->json(['message' => __('custom.user_not_found'),], 404);
-        }
-        $this->sendOtpPhone($user);
+        // if (!$user) {
+        //     return response()->json(['message' => __('custom.user_not_found'),], 404);
+        // }
+        $this->otp = new Otp;
+        $otp = $this->otp->generate($inpout, 6, 60);
+        $this->sendWhatsapp($inpout, $this->sendCodeVerification('', $otp->token));
         return response()->json(['message' => 'Success', 'status_code' => 200,], 200);
     }
 
