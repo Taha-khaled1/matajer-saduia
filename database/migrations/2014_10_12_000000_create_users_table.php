@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('name', 100);
             $table->enum('type', ['user', 'admin', 'vendor', 'affiliate'])->default('user');
-            $table->enum('subscription', ['silver', 'golden', 'normal'])->default('normal');
+            $table->enum('subscription', ['silver', 'golden', 'normal', 'none'])->default('none');
             $table->timestamp('subscription_at')->nullable()->default(now());
             $table->text('fcm')->nullable();
             $table->string('invitation_code')->nullable();

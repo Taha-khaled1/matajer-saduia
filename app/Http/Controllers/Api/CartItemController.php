@@ -276,8 +276,8 @@ class CartItemController extends Controller
                 }
             }
 
-            $cartPrice['cart_prices']['country_tax'] = $country_tax ?? 0;
-            $cartPrice['cart_prices']['total'] += $country_tax ?? 0;
+            $cartPrice['cart_prices']['country_tax'] =  0;
+            // $cartPrice['cart_prices']['total'] += $country_tax ?? 0;
 
             if ($cartPrice['cart_prices']['total'] < 0) {
                 $cartPrice['cart_prices']['total'] = 0;
@@ -303,7 +303,7 @@ class CartItemController extends Controller
                 'status_code' => 200
             ], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => __('custom.failed_to_retrieve_data') . $e, 'status_code' => 500], 500);
+            return response()->json(['message' => __('custom.failed_to_retrieve_data'), 'status_code' => 500], 500);
         }
     }
 
