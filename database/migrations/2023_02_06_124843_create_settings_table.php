@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('website_link')->nullable();
             $table->string('company_phone')->nullable();
             $table->string('company_address')->nullable();
+            $table->float('payment_shipping')->default(1);
             $table->string('twitter')->nullable();
             $table->string('facebook')->nullable();
             $table->string('google')->nullable();

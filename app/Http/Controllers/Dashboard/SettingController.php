@@ -107,6 +107,7 @@ class SettingController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'username' => 'required|string|max:255',
+                'payment_shipping' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
                 'phone' => 'nullable|string|max:20',
                 'address' => 'nullable|string|max:255',
@@ -129,7 +130,7 @@ class SettingController extends Controller
 
             $data = [
                 'company_name' => $request->username,
-                'email' => $request->email,
+                'email' => $request->email, 'payment_shipping' => $request->payment_shipping,
                 // 'logo' => $data['logo'],
                 'company_phone' => $request->phone,
                 'company_address' => $request->address,

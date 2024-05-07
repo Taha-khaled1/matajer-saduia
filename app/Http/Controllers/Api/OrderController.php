@@ -9,6 +9,7 @@ use App\Models\Coupon;
 use App\Models\MarketersReports;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ShippingCompanies;
 use App\Models\UserAddress;
 use App\Models\UserReview;
 use App\Models\Withdrawal;
@@ -113,7 +114,7 @@ class OrderController extends Controller
         if (!$accessToken) {
             return response()->json(['message' => __('custom.unauthorized'), 401], 401);
         }
-
+        $orderids = [];
         $mainRoute = env('MAIN_ROUTE');
         $user = $accessToken->tokenable;
         $orderPrice = Http::withHeaders([
@@ -154,11 +155,15 @@ class OrderController extends Controller
             foreach ($cartItemsGroupedByMerchant as $shopeId => $items) {
                 // Calculate order total for this merchant
                 $subtotal = 0;
+                $shipeing = 0;
                 foreach ($items as $item) {
                     $product = Product::find($item->product_id);
                     $subtotal += $product->price * $item->quantity;
+                    $shipeing += $product->shipping_fee * $item->quantity;
+                    // $shipeing += $product->shipping_fee * $item->quantity;
                 }
-
+                $shippingCompanies = ShippingCompanies::where('user_id', $shopeId)->first();
+                $total = $subtotal + $shipeing + $shippingCompanies->cost;
                 // Inserting order for this merchant
                 $orderId = DB::table('orders')->insertGetId([
                     'status' => 'pending',
@@ -168,12 +173,12 @@ class OrderController extends Controller
                     'cancelled' => false,
                     'isrefund' => $orderPrice['check_out']['isrefund'],
                     'refound_money' => $orderPrice['check_out']['refound_money'] ?? 0,
-                    'shipping' => $orderPrice['check_out']['total_shipping_fee'] ?? 0,
+                    'shipping' => $shipeing,
                     'tax' => 0,
-                    'total_country_tax' => $orderPrice['check_out']['country_tax'] ?? 0,
+                    'total_country_tax' =>  0,
                     'discount' => $orderPrice['check_out']['total_discount'] ?? 0,
                     'subtotal' => $subtotal,
-                    'total' => $subtotal, // For simplicity, assuming no tax, shipping, or discount per merchant
+                    'total' => $total, // For simplicity, assuming no tax, shipping, or discount per merchant
                     'description' => $request->description,
                     'user_id' => $userId,
                     'created_at' => now(),
@@ -182,8 +187,12 @@ class OrderController extends Controller
                     'coupon_id' => $copon->id ?? null,
                     'shope_id' => $shopeId, // Assigning shope_id to the order
                 ]);
+                $orderids[] = $orderId;
                 $shope = User::find($shopeId);
-                $this->sendWhatsapp($shope->phone, $this->purchaseNotification($user->name, $orderId, $subtotal));
+                if ($paymentMethod == "cash_on_delivery") {
+                    $this->sendWhatsapp($shope->phone, $this->purchaseNotification($user->name, $orderId, $total));
+                }
+
                 if ($user->referrer_id) {
                     $commissionAmount = 2.5;
                     $userAff = User::find($user->referrer_id);
@@ -217,7 +226,7 @@ class OrderController extends Controller
             if ($paymentMethod == 'paypal' || $paymentMethod == 'stripe') {
                 return redirect()->route('payment-payWithTapPayment', [
                     'orderItems' => $items,
-                    'order_id' => $orderId,
+                    'order_ids' => $orderids,
                 ]);
             } else {
                 CartItem::where('user_id', $userId)->delete();

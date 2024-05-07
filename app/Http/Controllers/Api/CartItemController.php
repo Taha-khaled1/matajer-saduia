@@ -168,11 +168,13 @@ class CartItemController extends Controller
             $cartItemsss = CartItem::cartItemsData($userId)->get();
             $dataPrices = $this->calculateTotalAndPrices($cartItemsss);
             $cartItems = CartItem::with('product.user')->where('user_id', $userId)->get();
-
+            $shippingCompaniesfee = 0;
 
             // Group products by merchant
-            $itemsByMerchant = $cartItems->groupBy('product.user.id')->map(function ($items, $merchantId) {
+            $itemsByMerchant = $cartItems->groupBy('product.user.id')->map(function ($items, $shippingCompaniesfee) {
+
                 $merchant = $items->first()->product->user;
+
                 return [
                     'merchant_info' => [
                         'id' => $merchant->id,
@@ -204,6 +206,11 @@ class CartItemController extends Controller
                     }),
                 ];
             })->values(); // هنا تتم إضافة values() لحذف المفاتيح العشوائية والاحتفاظ فقط بالقيم.
+            foreach ($itemsByMerchant as $key => $value) {
+                $shippingCompaniesfee += $value['merchant_info']['shipping_companies'][0]['cost'];
+            }
+            $dataPrices->original['total_shipping_fee'] += $shippingCompaniesfee;
+            $dataPrices->original['total'] += $shippingCompaniesfee;
             return response()->json([
                 'cart_items_by_merchant' => $itemsByMerchant,
                 'cart_prices' => $dataPrices->original,

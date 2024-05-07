@@ -236,6 +236,21 @@
                                 </div>
                             </div>
                         </div>
+                        @if ($setting->user->type == 'admin')
+                            <div class="form-group ">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">ضريبة بوابة الدفع (ريال)</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" placeholder="payment_shipping"
+                                            value="{{ $setting->payment_shipping }}" name="payment_shipping"
+                                            id="payment_shipping">
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="form-group ">
                             <div class="row">
                                 <div class="col-md-3">
@@ -243,7 +258,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" value="{{ $setting->idtax }}"
-                                        name="idtax" id="idtax" required>
+                                        name="idtax" id="idtax">
                                 </div>
                             </div>
                         </div>
@@ -256,7 +271,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <input type="text" class="form-control" value="{{ $setting->idnumber }}"
-                                        name="idnumber" id="idnumber" required>
+                                        name="idnumber" id="idnumber">
                                 </div>
                             </div>
                         </div>

@@ -30,18 +30,24 @@ class PayPalController extends Controller
     }
     public function payWithTapPayment(Request $request)
     {
-        $order = Order::find($request['order_id']);
-        $user = User::find($order->user_id);
+        // return $request;
+        $orderIdsString = implode("-", $request->order_ids);
+        $total = 0;
+        $user = '';
+        foreach ($request->order_ids as $orderId) {
+            $order = Order::find($orderId);
+            $total += $order->total;
+            $user = User::find($order->user_id);
+        }
+
         $payment = new TapPayment();
-        // $user = Auth::user();
         $response = $payment
             ->setUserFirstName($user->name)
-            ->setUserLastName("order" . '-' . $order->id . '-' . $order->id)
+            ->setUserLastName("order" . '-' . $orderIdsString . '-' . $order->id)
             ->setUserEmail($user->email)
             ->setUserPhone($user->phone ?? "01113051656")
-            ->setAmount($order->total)
+            ->setAmount($total)
             ->pay();
-        // echo $response['redirect_url'];
         return redirect()->away($response['redirect_url']);
     }
 
@@ -55,16 +61,24 @@ class PayPalController extends Controller
         $lastName = $parts[2];
         if ($response['success'] == true) {
             if ($firstName == 'order') {
+                $total = 0;
                 $orderId = $middleName ?? $lastName;
-                $order = Order::find($orderId);
-                $order->payment_status = 'paid';
-                $order->payment_method = 'paypal';
-                $order->save();
-                $user = User::find($order->user_id);
+                $orderIds = explode("-", $orderId);
+                $user = '';
+                foreach ($orderIds as $orderId) {
+                    $order = Order::find($orderId);
+                    $total += $order->total;
+                    $order->payment_status = 'paid';
+                    $order->payment_method = 'paypal';
+                    $order->save();
+                    $user = User::find($order->user_id);
+                    $shope = User::find($order->shope_id);
+                    $this->sendWhatsapp($shope->phone, $this->purchaseNotification($user->name, $orderId, $total));
+                    sendNotificationToAdmin('اضافة طلبيه', ' قام العميل ' . $user->name . ' بانشاء طلبيه جديده ' . ' معرف الطلبيه ' . $orderId, env("BASE_URL") . "/dashboard/orders/invoice/" . $orderId);
+                }
                 CartItem::where('user_id',  $user->id)->delete();
                 $user->refund -=  $order->refound_money;
                 $user->save();
-                sendNotificationToAdmin('اضافة طلبيه', ' قام العميل ' . $user->name . ' بانشاء طلبيه جديده ' . ' معرف الطلبيه ' . $orderId, env("BASE_URL") . "/dashboard/orders/invoice/" . $orderId);
                 return view("sucss-page");
             } elseif ($firstName == 'packge') {
                 $user = User::find($middleName);
