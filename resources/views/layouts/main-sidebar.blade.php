@@ -252,8 +252,8 @@
             @endcan
 
 
-            @can('جميع الاقسام الفرعيه')
-                {{-- @can('الارصده') --}}
+            {{-- @can('جميع الاقسام الفرعيه') --}}
+            @can('الارصده')
                 <li class="side-item side-item-category">الارصدة</li>
                 {{-- @can('المنتجات') --}}
                 <li class="slide">
@@ -269,6 +269,8 @@
 
                         {{-- @can('اضافة منتج') --}}
                         <li><a class="slide-item" href="{{ route('withdrawals') }}"> الحركات المالية
+                            </a></li>
+                        <li><a class="slide-item" href="{{ route('cart.users') }}"> عربة التسوق الفارغه
                             </a></li>
                         {{-- @endcan --}}
 
