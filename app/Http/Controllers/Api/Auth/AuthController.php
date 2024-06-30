@@ -110,7 +110,6 @@ class AuthController extends Controller
             $referrer = User::where('invitation_code', $request->invitation_code)->first();
 
             if ($referrer) {
-                // Set the referrer_id to the affiliate marketer's ID
                 $request['referrer_id'] = $referrer->id;
             }
         }
@@ -139,7 +138,9 @@ class AuthController extends Controller
         } else {
             $this->sendWhatsapp($user->phone, $this->successfulRegistration($user->name));
         }
-        return response()->json(['token' => $token, 'user' => $user, 'message' => 'Success', 'status_code' => 200], 200);
+        return response()->json([
+            'token' => $token, 'user' => $user, 'message' => 'Success', 'status_code' => 200
+        ], 200);
     }
 
 

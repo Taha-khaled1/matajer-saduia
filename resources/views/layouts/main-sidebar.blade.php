@@ -205,12 +205,12 @@
                         </svg><span class="side-menu__label">القسائم</span><i class="angle fe fe-chevron-down"></i></a>
                     <ul class="slide-menu">
 
-                        @can('جميع القسائم')
-                            <li><a class="slide-item" href="{{ route('coupons') }}">جميع القسائم</a></li>
-                        @endcan
-                        @can('اضافة قسيمه')
-                            <li><a class="slide-item" href="{{ route('coupons.create') }}">اضافة قسيمه</a></li>
-                        @endcan
+                        {{-- @can('جميع القسائم') --}}
+                        <li><a class="slide-item" href="{{ route('coupons') }}">جميع القسائم</a></li>
+                        {{-- @endcan --}}
+                        {{-- @can('اضافة قسيمه') --}}
+                        <li><a class="slide-item" href="{{ route('coupons.create') }}">اضافة قسيمه</a></li>
+                        {{-- @endcan --}}
 
                     </ul>
                 </li>
@@ -252,8 +252,8 @@
             @endcan
 
 
-
-            @can('الارصده')
+            @can('جميع الاقسام الفرعيه')
+                {{-- @can('الارصده') --}}
                 <li class="side-item side-item-category">الارصدة</li>
                 {{-- @can('المنتجات') --}}
                 <li class="slide">
